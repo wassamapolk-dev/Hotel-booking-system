@@ -1,34 +1,25 @@
-import java.awt.*;
-import javax.swing.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class main {
+
+    private static final Logger logger = Logger.getLogger(main.class.getName());
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(
-                () -> {
-                    JFrame window = new JFrame("KU.Hotel.com");
-                    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    window.setSize(800, 500);
-                    window.setLocationRelativeTo(null);
-
-                    // สั่งเปิดหน้า Login
-                    showLogin(window);
-                    window.setVisible(true);
+        /* Set the Nimbus look and feel */
+        // ถ้ามี Nimbus (มีมาตั้งแต่ Java SE 6) ให้ใช้ ไม่งั้นใช้ default look and feel
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
                 }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
 
-        );
-
-    }
-    
-    // เปิดหน้า Login พร้อม Background
-    public static void showLogin(JFrame window) {
-
-        JPanel BackGroud = new JPanel(new GridBagLayout());
-        BackGroud.setBackground(new Color(10, 55, 85));
-        BackGroud.add(Login.createPanel(window));
-        
-        window.setContentPane(BackGroud);
-
-        window.revalidate();
-        window.repaint();
+        /* Create and display the Register form */
+        java.awt.EventQueue.invokeLater(() -> new Register().setVisible(true));
     }
 }
