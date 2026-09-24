@@ -1,23 +1,28 @@
 ```
-Booking Hotel/
-│
-├── data/
-│   └── user.csv
+KU.Hotel.com/
 │
 ├── src/
-│   ├── model/
-│   │   ├── User.java
-│   │   ├── Room.java
-│   │   └── Booking.java
 │   │
-│   ├── view/
+│   ├── GUI/
+│   │   ├── main.java
 │   │   ├── Login.java
 │   │   ├── Register.java
-│   │   └── Booking.java
+│   │   ├── Booking.java
+│   │   └── AdminGUI.java
 │   │
-│   ├── controller/
-│   │   └── UserManager.java
-│   │
-│   └── Main.java
+│   └── Backend/
+│       ├── User.java
+│       ├── Guest.java
+│       ├── Admin.java
+│       ├── Room.java
+│       ├── Booking.java
+│       ├── UserManager.java
+│       ├── RoomManager.java
+│       └── BookingManager.java
+│
+├── data/
+│   ├── user.csv
+│   ├── room.csv
+│   └── booking.csv
 │
 └── README.md
