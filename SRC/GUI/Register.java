@@ -1,99 +1,133 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Register {
-    public static JPanel createPanel(JFrame window) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setBackground(new Color(10, 55, 85));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+/**
+ * หน้าจอสมัครสมาชิก (Register)
+ * เขียนแบบง่าย ๆ สำหรับมือใหม่ ไม่ใช้ GroupLayout ที่ NetBeans สร้างให้
+ * ใช้ setBounds() กำหนดตำแหน่งของแต่ละช่องเอง แทน
+ */
+public class Register extends JFrame {
 
-        // Title
-        JLabel titLabel = new JLabel("Register - KU.Hotel.com", SwingConstants.CENTER);
-        titLabel.setFont(new Font("Serif", Font.BOLD, 24));
-        titLabel.setForeground(Color.white);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        panel.add(titLabel, gbc);
+    private static final Logger logger = Logger.getLogger(Register.class.getName());
 
-        // input
-        JTextField emailInput = new JTextField(20);
+    // ประกาศตัวแปรของแต่ละช่องกรอกข้อมูล (ตั้งชื่อให้สื่อความหมาย)
+    private JPanel Background;
+    private JLabel titleLabel;
+    private JLabel emailLabel;
+    private JTextField emailField;
+    private JLabel nameLabel;
+    private JTextField nameField;
+    private JLabel passwordLabel;
+    private JPasswordField passwordField;
+    private JLabel confirmPasswordLabel;
+    private JPasswordField confirmPasswordField;
+    private JButton approveButton;
 
-        JPasswordField passInput = new JPasswordField(20);
-        JPasswordField conFirmPassInput = new JPasswordField(20);
+    public Register() {
+        // ตั้งค่าพื้นฐานของหน้าต่าง
+        setTitle("Register");
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null); // ให้หน้าต่างขึ้นตรงกลางจอ
 
-        // Email
-        JLabel emailLabel = new JLabel("Email:");
-        emailLabel.setForeground(Color.WHITE);
-        gbc.gridy = 1;
-        panel.add(emailLabel, gbc);
-        gbc.gridy = 2;
-        panel.add(emailInput, gbc);
-        gbc.gridy = 2;
-        panel.add(emailInput, gbc);
 
-        // Password
-        JLabel passLabel = new JLabel("Password:");
-        passLabel.setForeground(Color.WHITE);
-        gbc.gridy = 3;
-        panel.add(passLabel, gbc);
-        gbc.gridy = 4;
-        panel.add(passInput, gbc);
-        gbc.gridy = 5;
+        // ใช้ layout แบบ null คือเราจะกำหนดตำแหน่ง (x, y, กว้าง, สูง) ของทุกอย่างเอง
+        setLayout(null);
 
-        // Confirm Password
-        JLabel confirmLabel = new JLabel("Confirm Password:");
-        confirmLabel.setForeground(Color.WHITE);
-        gbc.gridy = 5;
-        panel.add(confirmLabel, gbc);
-        gbc.gridy = 6;
-        panel.add(conFirmPassInput, gbc);
-
-        // Button
-        JButton YesBtn = new JButton("Yes");
-        JButton BackBtn = new JButton("Back");
-
-        JPanel buttonpanel = new JPanel();
-        buttonpanel.setOpaque(false);
-        buttonpanel.add(YesBtn);
-        buttonpanel.add(BackBtn);
-
-        gbc.gridy = 7;
-        panel.add(buttonpanel, gbc);
-
-        // Event
-        YesBtn.addActionListener(
-                e -> {
-                    String email = emailInput.getText().trim();
-                    String pass = new String(passInput.getPassword()).trim();
-                    String conFirm = new String(conFirmPassInput.getPassword()).trim();
-                    if (email.isEmpty() || pass.isEmpty()) {
-                        JOptionPane.showConfirmDialog(window, "Please enter the Email or Password", "Warning",
-                                JOptionPane.WARNING_MESSAGE);
-                    } else if (!pass.equals(conFirm)) {
-                        JOptionPane.showConfirmDialog(window, "Password not correct", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else if (UserManager.isEmailExists(email)) {
-                        JOptionPane.showConfirmDialog(window, "This Email is already used", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        if (UserManager.saveUser(email, pass)) {
-                            JOptionPane.showConfirmDialog(window, "Complete Regis");
-                            // regis เสร็จกลับไปหน้าlogin
-                            main.showLogin(window);
-                            window.revalidate();
-                        }
-                    }
-                });
-        BackBtn.addActionListener(
-                e -> {
-                    main.showLogin(window);
-                    window.revalidate();
-                });
-
-        return panel;
+        buildForm();
     }
+
+    /**
+     * สร้างช่องกรอกข้อมูลและปุ่มทั้งหมด แล้ววางตำแหน่งลงบนหน้าต่าง
+     */
+    private void buildForm() {
+        
+        // หัวข้อ "Register"
+        titleLabel = new JLabel("Register");
+        titleLabel.setForeground(Color.white);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setBounds(180, 30, 200, 30);
+        add(titleLabel);
+
+        // ช่อง E-mail
+        emailLabel = new JLabel("E-mail");
+        emailLabel.setForeground(Color.white);
+        emailLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        emailLabel.setBounds(100, 90, 100, 25);
+        add(emailLabel);
+
+        emailField = new JTextField();
+        emailField.setBounds(100, 115, 280, 30);
+        add(emailField);
+
+        // ช่อง Name
+        nameLabel = new JLabel("Name");
+        nameLabel.setForeground(Color.white);
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        nameLabel.setBounds(100, 155, 100, 25);
+        add(nameLabel);
+
+        nameField = new JTextField();
+        nameField.setBounds(100, 180, 280, 30);
+        add(nameField);
+
+        // ช่อง Password
+        passwordLabel = new JLabel("Password");
+        passwordLabel.setForeground(Color.white);
+        passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        passwordLabel.setBounds(100, 220, 100, 25);
+        add(passwordLabel);
+
+        passwordField = new JPasswordField();
+        passwordField.setBounds(100, 245, 280, 30);
+        add(passwordField);
+
+        // ช่อง Confirm Password
+        confirmPasswordLabel = new JLabel("Confirm Password");
+        confirmPasswordLabel.setForeground(Color.white);
+        confirmPasswordLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        confirmPasswordLabel.setBounds(100, 285, 150, 25);
+        add(confirmPasswordLabel);
+
+        confirmPasswordField = new JPasswordField();
+        confirmPasswordField.setBounds(100, 310, 280, 30);
+        add(confirmPasswordField);
+
+        // ปุ่ม APPROVE
+        approveButton = new JButton("APPROVE");
+        approveButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        approveButton.setBounds(160, 370, 160, 40);
+
+        approveButton.addActionListener(e -> {
+        String email = emailField.getText();
+        String name = nameField.getText();
+        String password = new String(passwordField.getPassword());
+        String confirmPassword = new String( confirmPasswordField.getPassword());
+
+        if(email.isEmpty()||name.isEmpty()|| password.isEmpty()|| confirmPassword.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Please fill in all the information.!!!","Alert",JOptionPane.WARNING_MESSAGE);
+            return ;
+        }
+        if(!password.equals(confirmPassword)){
+            JOptionPane.showMessageDialog(this,"Passwords do not match.","Alert PAssword",JOptionPane.WARNING_MESSAGE);
+            return ;
+        }
+         JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        add(approveButton);
+
+        Background = new JPanel();
+        Background.setBackground(new Color(0, 51, 102));
+        Background.setBounds(0, 0, 500, 500);
+        Background.setLayout(null);
+        add(Background);
+       
+    }
+
 }
