@@ -1,16 +1,17 @@
+package GUI;
+
+import Backend.UserManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.StructuredTaskScope.FailedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * หน้าจอสมัครสมาชิก (Register)
- * เขียนแบบง่าย ๆ สำหรับมือใหม่ ไม่ใช้ GroupLayout ที่ NetBeans สร้างให้
- * ใช้ setBounds() กำหนดตำแหน่งของแต่ละช่องเอง แทน
- */
-public class Register extends JFrame {
+
+public class Register extends JFrame 
+{
 
     private static final Logger logger = Logger.getLogger(Register.class.getName());
 
@@ -27,7 +28,8 @@ public class Register extends JFrame {
     private JPasswordField confirmPasswordField;
     private JButton approveButton;
 
-    public Register() {
+    public Register() 
+    {
         // ตั้งค่าพื้นฐานของหน้าต่าง
         setTitle("Register");
         setSize(500, 500);
@@ -45,7 +47,8 @@ public class Register extends JFrame {
     /**
      * สร้างช่องกรอกข้อมูลและปุ่มทั้งหมด แล้ววางตำแหน่งลงบนหน้าต่าง
      */
-    private void buildForm() {
+    private void buildForm() 
+    {
         
         // หัวข้อ "Register"
         titleLabel = new JLabel("Register");
@@ -103,22 +106,55 @@ public class Register extends JFrame {
         approveButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         approveButton.setBounds(160, 370, 160, 40);
 
-        approveButton.addActionListener(e -> {
-        String email = emailField.getText();
-        String name = nameField.getText();
-        String password = new String(passwordField.getPassword());
-        String confirmPassword = new String( confirmPasswordField.getPassword());
+        approveButton.addActionListener
+        (e -> 
+            {
+                String email = emailField.getText();
+                String name = nameField.getText();
+                String password = new String(passwordField.getPassword());
+                String confirmPassword = new String( confirmPasswordField.getPassword());
 
-        if(email.isEmpty()||name.isEmpty()|| password.isEmpty()|| confirmPassword.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Please fill in all the information.!!!","Alert",JOptionPane.WARNING_MESSAGE);
-            return ;
-        }
-        if(!password.equals(confirmPassword)){
-            JOptionPane.showMessageDialog(this,"Passwords do not match.","Alert PAssword",JOptionPane.WARNING_MESSAGE);
-            return ;
-        }
-         JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
-        });
+                if(email.isEmpty()||name.isEmpty()|| password.isEmpty()|| confirmPassword.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(this, "Please fill in all the information.!!!","Alert",JOptionPane.WARNING_MESSAGE);
+                    return ;
+                }
+                if(!password.equals(confirmPassword))
+                {
+                    JOptionPane.showMessageDialog(this,"Passwords do not match.","Alert PAssword",JOptionPane.WARNING_MESSAGE);
+                    return ;
+                }
+                if (UserManager.isEmailExists(email)) 
+                {
+                    JOptionPane.showConfirmDialog(this, "Email is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (UserManager.isEmailExists(name)) 
+                {
+                    JOptionPane.showConfirmDialog(this, "Name is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
+            
+            
+                boolean isSaved = UserManager.saveUser(email, name, password);
+
+                if (isSaved) 
+                {
+                    //Clear ค่าในช่องเมื่อสมัครเสร็จ
+
+                    emailField.setText("");
+                    nameField.setText("");
+                    passwordField.setText("");
+                    confirmPasswordField.setText("");
+                }
+                else
+                {
+                    JOptionPane.showConfirmDialog(this, "Failed to save user data.","Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        );
 
         add(approveButton);
 
