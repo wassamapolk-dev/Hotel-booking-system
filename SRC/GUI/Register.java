@@ -9,11 +9,7 @@ import java.util.concurrent.StructuredTaskScope.FailedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * หน้าจอสมัครสมาชิก (Register)
- * เขียนแบบง่าย ๆ สำหรับมือใหม่ ไม่ใช้ GroupLayout ที่ NetBeans สร้างให้
- * ใช้ setBounds() กำหนดตำแหน่งของแต่ละช่องเอง แทน
- */
+
 public class Register extends JFrame 
 {
 
