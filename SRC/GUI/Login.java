@@ -1,4 +1,3 @@
-package GUI;
 
 import java.awt.*;
 import java.rmi.registry.Registry;
