@@ -1,4 +1,3 @@
-
 import Backend.UserManager;
 import javax.swing.*;
 import java.awt.*;

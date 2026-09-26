@@ -4,9 +4,9 @@ import java.rmi.registry.Registry;
 import Backend.*;
 import javax.imageio.spi.RegisterableService;
 import javax.swing.*;
-
+ 
 public class Login extends JPanel {
-
+ 
     private JButton btnLogin;
     private JButton btnRegister;
     private JLabel jLabel1;
