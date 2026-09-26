@@ -3,6 +3,7 @@ package Backend;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.jar.Attributes.Name;
 
 public class UserManager 
 {
@@ -11,18 +12,24 @@ public class UserManager
     //เอาไว้เช้ค การLogin ที่user ใส่ข้อมูลถูกต้องมั้ย
     public static boolean checkLogin(String email, String password)
     {
+        File file = new File("data/user.csv");
+        if (!file.exists()) 
+        {
+            return false;
+        }
             try 
         {
             List<String> lines = Files.readAllLines(Paths.get(FILE_NAME));
             for (int i = 1; i < lines.size(); i++) 
             {
                 String[] row = lines.get(i).split(",");
-                if (row.length >= 2) 
+                if (row.length >= 3) 
                 {
                     String savedEmail = row [0].trim();
-                    String savedPassword = row[1].trim();
+                    String savedName = row[1].trim();
+                    String savedPassword = row[2].trim();
                     
-                    if (savedEmail.equalsIgnoreCase(email) && savedPassword.equalsIgnoreCase(password)) 
+                    if(savedEmail.equalsIgnoreCase(email) && savedPassword.equalsIgnoreCase(password))
                     {
                         return true;
                     }
