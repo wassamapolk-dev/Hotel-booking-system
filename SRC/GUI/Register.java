@@ -9,13 +9,18 @@ import java.util.concurrent.StructuredTaskScope.FailedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * หน้าจอสมัครสมาชิก (Register)
+ * เขียนแบบง่าย ๆ สำหรับมือใหม่ ไม่ใช้ GroupLayout ที่ NetBeans สร้างให้
+ * ใช้ setBounds() กำหนดตำแหน่งของแต่ละช่องเอง แทน
+ */
 public class Register extends JFrame 
 {
 
     private static final Logger logger = Logger.getLogger(Register.class.getName());
 
     // ประกาศตัวแปรของแต่ละช่องกรอกข้อมูล (ตั้งชื่อให้สื่อความหมาย)
+    private JFrame loginFrame;
     private JPanel Background;
     private JLabel titleLabel;
     private JLabel emailLabel;
@@ -28,18 +33,31 @@ public class Register extends JFrame
     private JPasswordField confirmPasswordField;
     private JButton approveButton;
 
-    public Register() 
+    public Register(JFrame loginFrame) 
     {
+
         // ตั้งค่าพื้นฐานของหน้าต่าง
+        this.loginFrame = loginFrame; //เพื่มมาเพื่อให้ใช้เเยกหน้า login กับ register ได้
+
         setTitle("Register");
         setSize(500, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null); // ให้หน้าต่างขึ้นตรงกลางจอ
 
 
         // ใช้ layout แบบ null คือเราจะกำหนดตำแหน่ง (x, y, กว้าง, สูง) ของทุกอย่างเอง
         setLayout(null);
+        addWindowListener(new java.awt.event.WindowAdapter() 
+        {
+            public void windowClosing(java.awt.event.WindowEvent e)
+            {
+                if (loginFrame != null) 
+                {
+                    loginFrame.setVisible(true);
+                }
+            }
+        });
 
         buildForm();
     }
@@ -126,16 +144,16 @@ public class Register extends JFrame
                 }
                 if (UserManager.isEmailExists(email)) 
                 {
-                    JOptionPane.showConfirmDialog(this, "Email is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Email is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 if (UserManager.isEmailExists(name)) 
                 {
-                    JOptionPane.showConfirmDialog(this, "Name is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Name is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
-                JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
+                // JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
             
             
                 boolean isSaved = UserManager.saveUser(email, name, password);
@@ -148,10 +166,17 @@ public class Register extends JFrame
                     nameField.setText("");
                     passwordField.setText("");
                     confirmPasswordField.setText("");
+                    JOptionPane.showMessageDialog(this, "Register Success", "Success",JOptionPane.INFORMATION_MESSAGE);
+                    
+                    if (loginFrame != null) 
+                    {
+                        loginFrame.setVisible(true);
+                    }
+                    dispose();
                 }
                 else
                 {
-                    JOptionPane.showConfirmDialog(this, "Failed to save user data.","Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Failed to save user data.","Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         );
