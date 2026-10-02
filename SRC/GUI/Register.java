@@ -1,3 +1,5 @@
+package GUI;
+
 import Backend.UserManager;
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +9,8 @@ import java.util.concurrent.StructuredTaskScope.FailedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Register extends JFrame {
+public class Register extends JFrame 
+{
 
     private static final Logger logger = Logger.getLogger(Register.class.getName());
 
@@ -24,7 +27,8 @@ public class Register extends JFrame {
     private JPasswordField confirmPasswordField;
     private JButton approveButton;
 
-    public Register(JFrame loginFrame) {
+    public Register(JFrame loginFrame) 
+    {
 
         this.loginFrame = loginFrame; // เพื่มมาเพื่อให้ใช้เเยกหน้า login กับ register ได้
 
@@ -36,9 +40,12 @@ public class Register extends JFrame {
 
         // ใช้ layout แบบ null คือเราจะกำหนดตำแหน่ง (x, y, กว้าง, สูง) ของทุกอย่างเอง
         setLayout(null);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                if (loginFrame != null) {
+        addWindowListener(new java.awt.event.WindowAdapter() 
+        {
+            public void windowClosing(java.awt.event.WindowEvent e) 
+            {
+                if (loginFrame != null) 
+                {
                     loginFrame.setVisible(true);
                 }
             }
@@ -50,7 +57,8 @@ public class Register extends JFrame {
     /**
      * สร้างช่องกรอกข้อมูลและปุ่มทั้งหมด
      */
-    private void buildForm() {
+    private void buildForm() 
+    {
 
         // หัวข้อ "Register"
         titleLabel = new JLabel("Register");
@@ -114,22 +122,26 @@ public class Register extends JFrame {
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
 
-            if (email.isEmpty() || name.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (email.isEmpty() || name.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) 
+            {
                 JOptionPane.showMessageDialog(this, "Please fill in all the information.!!!", "Alert",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if (!password.equals(confirmPassword)) {
+            if (!password.equals(confirmPassword)) 
+            {
                 JOptionPane.showMessageDialog(this, "Passwords do not match.", "Alert PAssword",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if (UserManager.isEmailExists(email)) {
+            if (UserManager.isEmailExists(email)) 
+            {
                 JOptionPane.showMessageDialog(this, "Email is already registered", "Alert",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if (UserManager.isEmailExists(name)) {
+            if (UserManager.isEmailExists(name)) 
+            {
                 JOptionPane.showMessageDialog(this, "Name is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -138,7 +150,8 @@ public class Register extends JFrame {
 
             boolean isSaved = UserManager.saveUser(email, name, password);
 
-            if (isSaved) {
+            if (isSaved) 
+            {
                 // Clear ค่าในช่องเมื่อสมัครเสร็จ
 
                 emailField.setText("");
@@ -147,11 +160,14 @@ public class Register extends JFrame {
                 confirmPasswordField.setText("");
                 JOptionPane.showMessageDialog(this, "Register Success", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                if (loginFrame != null) {
+                if (loginFrame != null) 
+                {
                     loginFrame.setVisible(true);
                 }
                 dispose();
-            } else {
+            } 
+            else 
+            {
                 JOptionPane.showMessageDialog(this, "Failed to save user data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });

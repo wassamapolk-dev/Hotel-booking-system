@@ -2,10 +2,18 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-public class Booking extends JFrame {
+public class Booking extends JFrame 
+{
 
     // Components
+    private String userEmail;
+
     private JPanel panelMenu;
     private JPanel panelBooking;
 
@@ -25,10 +33,19 @@ public class Booking extends JFrame {
     private JButton guestButton;
     private JButton roomButton;
 
-    public Booking() {
+    // public Booking(String userEmail)
+    // {
+    //     this();
+    //     this.userEmail = userEmail;
+    //     setTitle("KU Hotel @Booking - " + userEmail);
+    // }
+
+    public Booking(String userEmail) 
+    {
+        this.userEmail = userEmail;
 
         // JFrame
-        setTitle("KU Hotel @Booking");
+        setTitle("KU Hotel @Booking" + userEmail);
         setSize(1044, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -212,28 +229,41 @@ public class Booking extends JFrame {
        
     }
 
+    public Booking()
+    {
+        this("guest@ku.th");
+    }
+
     // CONFIRM BOOKING
-    private void confirmBooking() {
+    private void confirmBooking() 
+    {
 
         String name = nameField.getText();
         String room = roomComboBox.getSelectedItem().toString();
         String nightText = nightField.getText();
 
-        if (name.isEmpty() || nightText.isEmpty()) {
+        if (name.isEmpty() || nightText.isEmpty()) 
+        {
             JOptionPane.showMessageDialog(this,"Please fill in all information.");
             return;
         }
 
-        try {
+        try 
+        {
             int night = Integer.parseInt(nightText);
 
             int price = 0;
 
-            if (room.startsWith("101")) {
+            if (room.startsWith("101")) 
+            {
                 price = 1000;
-            } else if (room.startsWith("102")) {
+            } 
+            else if (room.startsWith("102")) 
+            {
                 price = 1500;
-            } else if (room.startsWith("103")) {
+            } 
+            else if (room.startsWith("103")) 
+            {
                 price = 2000;
             }
 
@@ -241,16 +271,22 @@ public class Booking extends JFrame {
 
             totalLabel.setText("Total " + total + " Baht");
 
+            Backend.BookingService.saveBookingToCSV(this.userEmail, name, room, night, total);
+            Backend.BookingService.sendEmailSimulation(this.userEmail, name, room, night, total);
+
             JOptionPane.showMessageDialog(this,"Booking Successful!\n"
                             + "Name: " + name + "\n"
                             + "Room: " + room + "\n"
                             + "Night: " + night + "\n"
-                            + "Total: " + total + " Baht");
+                            + "Total: " + total + " Baht",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (NumberFormatException e) {
 
+        } 
+        catch (NumberFormatException e) 
+        {
             JOptionPane.showMessageDialog(this,"Night must be a number.");
         }
     }
-
+    
 }
