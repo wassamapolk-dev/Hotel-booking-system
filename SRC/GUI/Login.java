@@ -1,3 +1,4 @@
+package GUI;
 
 import java.awt.*;
 import java.rmi.registry.Registry;
@@ -5,7 +6,8 @@ import Backend.*;
 import javax.imageio.spi.RegisterableService;
 import javax.swing.*;
  
-public class Login extends JPanel {
+public class Login extends JPanel 
+{
  
     private JButton btnLogin;
     private JButton btnRegister;
@@ -15,11 +17,13 @@ public class Login extends JPanel {
     private JTextField txtEmail;
     private JPasswordField txtPassword;
 
-    public Login() {
+    public Login() 
+    {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() 
+    {
 
         jLabel1 = new JLabel();
         jLabel2 = new JLabel();
@@ -89,36 +93,56 @@ public class Login extends JPanel {
     }
 
     // หน้าlogin
-    private void btnLoginActionPerformed() {
+    // หน้าlogin
+    private void btnLoginActionPerformed() 
+    {
         String email = txtEmail.getText().trim();
         String password = new String(txtPassword.getPassword());
 
-        if (email.isEmpty() || password.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty()) 
+        {
             JOptionPane.showMessageDialog(this, "Please fill email and password", "Alert", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-
-        // เปิดฺBooking ถ้าLoingE-mail Password ไม่ตรง ให้showMassageDialog
-        if(Backend.UserManager.checkLogin(email, password)){
-        Booking BookingFrame = new Booking();
-        BookingFrame.setVisible(true);
-
-        Window window = SwingUtilities.getWindowAncestor(this);
-        if (window != null) {
-            window.dispose();
+        // 1. เช็กว่าเป็น Admin หรือไม่ (จาก admin.csv)
+        if (Backend.Admin.checkAdminLogin(email, password)) 
+        {
+            GUI.Admin adminFrame = new GUI.Admin(email);
+            adminFrame.setVisible(true);
+        
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) 
+            {
+                window.dispose();
+            }
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Email or Password is wrong", "Error", JOptionPane.ERROR_MESSAGE);
+        // 2. ถ้าไม่ใช่ Admin ค่อยเช็กว่าใช่ User ทั่วไปหรือไม่ (จาก user.csv)
+        else if (Backend.UserManager.checkLogin(email, password)) 
+        {
+            Booking bookingFrame = new Booking(email);
+            bookingFrame.setVisible(true);
+        
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) 
+            {
+                window.dispose();
+            }
+        }
+        // 3. ถ้าล็อกอินไม่ผ่านทั้งคู่
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Email or Password is wrong", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-          
-    }  
-
-    private void btnRegisterActionPerformed() {
+    
+    private void btnRegisterActionPerformed() 
+    {
         // เปิดหน้าRegister
         // System.out.println("Register pressed");
         Window window = SwingUtilities.getWindowAncestor(this);
-        if (window instanceof JFrame) {
+        if (window instanceof JFrame) 
+        {
             JFrame mainFrame = (JFrame) window;
             mainFrame.setVisible(false);
 
