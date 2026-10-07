@@ -1,0 +1,72 @@
+===============================================
+FROM: KU Hotel Reservation System <noreply@ku.hotel.com>
+TO: asd
+DATE: 2026-10-07 00:04:00
+SUBJECT: Booking Confirmation - KU.Hotel.com
+-----------------------------------------------
+Dear Aungpao,
+
+Thank you for your booking with KU Hotel!
+Room Type : 101(Single Room) 1000 Bath
+Nights    : 2
+Total     : 2000 THB
+
+We look forward to welcoming you.
+Best Regards,
+KU Hotel Team
+===============================================
+
+===============================================
+FROM: KU Hotel Reservation System <noreply@ku.hotel.com>
+TO: asd
+DATE: 2026-10-07 00:05:05
+SUBJECT: Booking Confirmation - KU.Hotel.com
+-----------------------------------------------
+Dear Aungpao,
+
+Thank you for your booking with KU Hotel!
+Room Type : 101(Single Room) 1000 Bath
+Nights    : 2
+Total     : 2000 THB
+
+We look forward to welcoming you.
+Best Regards,
+KU Hotel Team
+===============================================
+
+===============================================
+FROM: KU Hotel Reservation System <noreply@ku.hotel.com>
+TO: asd
+DATE: 2026-10-07 00:44:29
+SUBJECT: Booking Confirmation - KU.Hotel.com
+-----------------------------------------------
+Dear Aungpao,
+
+Thank you for your booking with KU Hotel!
+Room Type : 101(Single Room) 1000 Bath
+Nights    : 2
+Total     : 2000 THB
+
+We look forward to welcoming you.
+Best Regards,
+KU Hotel Team
+===============================================
+
+===============================================
+FROM: KU Hotel Reservation System <noreply@ku.hotel.com>
+TO: asd
+DATE: 2026-10-07 17:44:06
+SUBJECT: Booking Confirmation - KU.Hotel.com
+-----------------------------------------------
+Dear Aungpao,
+
+Thank you for your booking with KU Hotel!
+Room Type : 101(Single Room) 1000 Bath
+Nights    : 2
+Total     : 2000 THB
+
+We look forward to welcoming you.
+Best Regards,
+KU Hotel Team
+===============================================
+

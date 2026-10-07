@@ -76,14 +76,14 @@ public class Login extends JPanel
         btnRegister.setText("Register");
         btnRegister.addActionListener(evt -> btnRegisterActionPerformed());
 
-        //จัด Layout หน้าจอ
+        // จัด Layout หน้าจอ
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 0, 8, 0);
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        //Title
+        // 1. Title
         gbc.gridy = 0;
         gbc.insets = new Insets(20, 0, 30, 0);
         add(jLabel1, gbc);
@@ -91,18 +91,18 @@ public class Login extends JPanel
         gbc.insets = new Insets(4, 0, 4, 0);
         gbc.anchor = GridBagConstraints.WEST;
 
-        //Email
+        // 2. Email
         gbc.gridy = 1;
         add(jLabel2, gbc);
 
         gbc.gridy = 2;
         add(txtEmail, gbc);
 
-        //Password Label
+        // 3. Password Label
         gbc.gridy = 3;
         add(jLabel3, gbc);
 
-        // สร้าง Panel มารวม Password และ CheckBox ให้อยู่บรรทัดเดียวกัน
+        // 4. สร้าง Panel มารวม Password และ CheckBox ให้อยู่บรรทัดเดียวกัน
         JPanel passPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         passPanel.setOpaque(false);
         passPanel.add(txtPassword);
@@ -136,7 +136,7 @@ public class Login extends JPanel
             return;
         }
 
-        // เช็กว่าเป็น Admin หรือไม่ (จาก admin.csv)
+        // 1. เช็กว่าเป็น Admin หรือไม่ (จาก admin.csv)
         if (Backend.Admin.checkAdminLogin(email, password)) 
         {
             GUI.Admin adminFrame = new GUI.Admin(email);
@@ -148,11 +148,16 @@ public class Login extends JPanel
                 window.dispose();
             }
         }
-        // ถ้าไม่ใช่ Admin ค่อยเช็กว่าใช่ User ทั่วไปหรือไม่ (จาก user.csv)
+        // 2. ถ้าไม่ใช่ Admin ค่อยเช็กว่าใช่ User ทั่วไปหรือไม่ (จาก user.csv)
         else if (Backend.UserManager.checkLogin(email, password)) 
         {
-            Booking bookingFrame = new Booking(email);
-            bookingFrame.setVisible(true);
+            JFrame roomFrame = new JFrame("KU Hotel @Room " + email);
+            roomFrame.setSize(1044, 600);
+            roomFrame.setResizable(false);
+            roomFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            roomFrame.setLocationRelativeTo(null);
+            roomFrame.add(new Room(email));
+            roomFrame.setVisible(true);
         
             Window window = SwingUtilities.getWindowAncestor(this);
             if (window != null) 
@@ -160,7 +165,7 @@ public class Login extends JPanel
                 window.dispose();
             }
         }
-        // ถ้าล็อกอินไม่ผ่านทั้งคู่
+        // 3. ถ้าล็อกอินไม่ผ่านทั้งคู่
         else
         {
             JOptionPane.showMessageDialog(this, "Email or Password is wrong", "Error", JOptionPane.ERROR_MESSAGE);
