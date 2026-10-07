@@ -37,7 +37,7 @@ public class Login extends JPanel
         btnLogin = new JButton();
         btnRegister = new JButton();
 
-        setBackground(new Color(0, 51, 102));
+        setBackground(new Color(13, 31, 35));
         setPreferredSize(new Dimension(500, 500));
 
         jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 36));
@@ -76,14 +76,14 @@ public class Login extends JPanel
         btnRegister.setText("Register");
         btnRegister.addActionListener(evt -> btnRegisterActionPerformed());
 
-        // จัด Layout หน้าจอ
+        //จัด Layout หน้าจอ
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 0, 8, 0);
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // 1. Title
+        //Title
         gbc.gridy = 0;
         gbc.insets = new Insets(20, 0, 30, 0);
         add(jLabel1, gbc);
@@ -91,18 +91,18 @@ public class Login extends JPanel
         gbc.insets = new Insets(4, 0, 4, 0);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // 2. Email
+        //Email
         gbc.gridy = 1;
         add(jLabel2, gbc);
 
         gbc.gridy = 2;
         add(txtEmail, gbc);
 
-        // 3. Password Label
+        //Password Label
         gbc.gridy = 3;
         add(jLabel3, gbc);
 
-        // 4. สร้าง Panel มารวม Password และ CheckBox ให้อยู่บรรทัดเดียวกัน
+        // สร้าง Panel มารวม Password และ CheckBox ให้อยู่บรรทัดเดียวกัน
         JPanel passPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         passPanel.setOpaque(false);
         passPanel.add(txtPassword);
@@ -136,7 +136,7 @@ public class Login extends JPanel
             return;
         }
 
-        // 1. เช็กว่าเป็น Admin หรือไม่ (จาก admin.csv)
+        // เช็กว่าเป็น Admin หรือไม่ (จาก admin.csv)
         if (Backend.Admin.checkAdminLogin(email, password)) 
         {
             GUI.Admin adminFrame = new GUI.Admin(email);
@@ -148,7 +148,7 @@ public class Login extends JPanel
                 window.dispose();
             }
         }
-        // 2. ถ้าไม่ใช่ Admin ค่อยเช็กว่าใช่ User ทั่วไปหรือไม่ (จาก user.csv)
+        // ถ้าไม่ใช่ Admin ค่อยเช็กว่าใช่ User ทั่วไปหรือไม่ (จาก user.csv)
         else if (Backend.UserManager.checkLogin(email, password)) 
         {
             Booking bookingFrame = new Booking(email);
@@ -160,7 +160,7 @@ public class Login extends JPanel
                 window.dispose();
             }
         }
-        // 3. ถ้าล็อกอินไม่ผ่านทั้งคู่
+        // ถ้าล็อกอินไม่ผ่านทั้งคู่
         else
         {
             JOptionPane.showMessageDialog(this, "Email or Password is wrong", "Error", JOptionPane.ERROR_MESSAGE);

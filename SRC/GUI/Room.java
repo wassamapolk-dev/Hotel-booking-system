@@ -1,125 +1,225 @@
-import java.awt.*;
+package GUI;
+
 import javax.swing.*;
+import java.awt.*;
 
 public class Room extends JPanel {
- 
-    private static final Color COLOR_BG = new Color(0, 102, 153);
-    private static final Color COLOR_MENU = new Color(0, 0, 153);
-    private static final Color COLOR_BUTTON = new Color(204, 204, 204);
- 
-    private JPanel pnlMenu;
-    private JPanel pnlMain;
-    private JPanel pnlRooms;
-    private JLabel lblHotel;
-    private JLabel lblTitle;
-    private JButton btnBooking;
-    private JButton btnGuest;
-    private JButton btnRoom;
-    private JButton[] roomButtons;
- 
+
+    private JPanel panelMenu;
+    private JPanel panelRoom;
+
+    private JLabel title;
+    private JLabel roomTitle;
+
+    private JButton bookingButton;
+    private JButton guestButton;
+    private JButton roomButton;
+
+    private JButton room101;
+    private JButton room102;
+    private JButton room103;
+    private JButton room104;
+    private JButton room105;
+    private JButton room106;
+
     public Room() {
-        initUI();
-    }
- 
-    private void initUI() {
+
+        // ROOM PANEL
         setLayout(new BorderLayout());
-        setBackground(COLOR_BG);
+
+        // ซ้าย MENU
+        panelMenu = new JPanel();
+        panelMenu.setBackground(new Color(13, 31, 35));
+
+        // ขนาดเหมือน Booking
+        panelMenu.setPreferredSize(new Dimension(270, 600));
+        panelMenu.setLayout(new BoxLayout(panelMenu, BoxLayout.Y_AXIS));
+
+        // TITLE
+        title = new JLabel("KU Hotel @Booking");
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+
+        // BUTTON
+        bookingButton = new JButton("Booking");
+        guestButton = new JButton("GUEST");
+        roomButton = new JButton("ROOM");
+
+
+        // ขนาดปุ่มเหมือน Booking
+
+
+        bookingButton.setMaximumSize(new Dimension(175, 83));
+
+        guestButton.setMaximumSize(new Dimension(175, 83));
+
+        roomButton.setMaximumSize(new Dimension(175, 83));
+
+        // สีปุ่ม
+
+
+        bookingButton.setBackground(new Color(105, 129, 141));
+        guestButton.setBackground(new Color(105, 129, 141));
+        roomButton.setBackground(new Color(105, 129, 141));
+
  
-        add(createMenuPanel(), BorderLayout.WEST);
-        add(createMainPanel(), BorderLayout.CENTER);
+        // Font ปุ่ม
+
+
+        bookingButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        guestButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        roomButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
+
+        // สีตัวอักษร
+        bookingButton.setForeground(Color.WHITE);
+        guestButton.setForeground(Color.WHITE);
+        roomButton.setForeground(Color.WHITE);
+
+        // จัดตำแหน่ง
+
+
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bookingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        guestButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        roomButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+        // เพิ่มลง MENU
+   
+
+        panelMenu.add(Box.createVerticalStrut(45));
+        panelMenu.add(title);
+        panelMenu.add(Box.createVerticalStrut(80));
+        panelMenu.add(bookingButton);
+        panelMenu.add(Box.createVerticalStrut(18));
+        panelMenu.add(guestButton);
+        panelMenu.add(Box.createVerticalStrut(18));
+        panelMenu.add(roomButton);
+
+     
+        // ขวา ROOM
+        panelRoom = new JPanel();
+
+        panelRoom.setBackground(new Color(19, 46, 53));
+
+        panelRoom.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+  
+        // TITLE
+        roomTitle = new JLabel("Select Room");
+
+        roomTitle.setForeground(Color.WHITE);
+
+        roomTitle.setFont(
+                new Font("Segoe UI", Font.BOLD, 30));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        gbc.gridwidth = 2;
+
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        gbc.insets = new Insets(0, 0, 30, 0);
+
+        panelRoom.add(roomTitle, gbc);
+
+        // ROOM BUTTON
+        room101 = createRoomButton("101");
+        room102 = createRoomButton("102");
+
+        room103 = createRoomButton("103");
+        room104 = createRoomButton("104");
+
+        room105 = createRoomButton("105");
+        room106 = createRoomButton("106");
+
+
+        // 101
+        gbc.gridwidth = 1;
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+
+        gbc.insets = new Insets(10, 20, 10, 20);
+
+        panelRoom.add(room101, gbc);
+
+
+        // 102
+        gbc.gridx = 1;
+        panelRoom.add(room102, gbc);
+
+
+        // 103
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        panelRoom.add(room103, gbc);
+
+
+        // 104
+        gbc.gridx = 1;
+        panelRoom.add(room104, gbc);
+
+  
+        // 105
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panelRoom.add(room105, gbc);
+
+        // 106
+        gbc.gridx = 1;
+        panelRoom.add(room106, gbc);
+
+
+        // เพิ่ม Panel
+        add(panelMenu, BorderLayout.WEST);
+
+        add(panelRoom, BorderLayout.CENTER);
+
+
+        // BUTTON EVENTS
+        bookingButton.addActionListener(e -> {
+
+            Booking booking = new Booking();
+            booking.setVisible(true);
+            Window window = SwingUtilities.getWindowAncestor(this);
+
+            if (window != null) {
+                window.dispose();
+            }
+
+        });
+
+        room101.addActionListener(e -> onRoomClicked("101"));
+        room102.addActionListener(e -> onRoomClicked("102"));
+        room103.addActionListener(e -> onRoomClicked("103"));
+        room104.addActionListener(e -> onRoomClicked("104"));
+        room105.addActionListener(e -> onRoomClicked("105"));
+        room106.addActionListener(e -> onRoomClicked("106"));
     }
- 
-    //ปุ่มทางซ้าย
-    private JPanel createMenuPanel() {
-        pnlMenu = new JPanel();
-        pnlMenu.setBackground(COLOR_MENU);
-        pnlMenu.setLayout(new BoxLayout(pnlMenu, BoxLayout.Y_AXIS));
-        pnlMenu.setBorder(BorderFactory.createEmptyBorder(39, 20, 0, 26));
-        pnlMenu.setPreferredSize(new Dimension(134, 300));
- 
-        lblHotel = new JLabel("KU HOTEL");
-        lblHotel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblHotel.setForeground(Color.WHITE);
-        lblHotel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        lblHotel.setAlignmentX(LEFT_ALIGNMENT);
- 
-        btnBooking = createMenuButton("Booking", 36);
-        btnGuest = createMenuButton("Guest", 34);
-        btnRoom = createMenuButton("Room", 34);
- 
-        btnBooking.addActionListener(e -> onBookingClicked());
-        btnGuest.addActionListener(e -> onGuestClicked());
-        btnRoom.addActionListener(e -> onRoomMenuClicked());
- 
-        pnlMenu.add(lblHotel);
-        pnlMenu.add(Box.createRigidArea(new Dimension(0, 29)));
-        pnlMenu.add(btnBooking);
-        pnlMenu.add(Box.createRigidArea(new Dimension(0, 18)));
-        pnlMenu.add(btnGuest);
-        pnlMenu.add(Box.createRigidArea(new Dimension(0, 18)));
-        pnlMenu.add(btnRoom);
-        pnlMenu.add(Box.createVerticalGlue());
- 
-        return pnlMenu;
+
+
+    // สร้างปุ่มห้อง
+    private JButton createRoomButton(
+            String roomNumber) {
+
+        JButton button = new JButton(roomNumber);
+        button.setBackground(new Color(105, 129, 141));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        button.setPreferredSize(new Dimension(175, 83));
+
+        return button;
     }
- 
-    private JButton createMenuButton(String text, int height) {
-        JButton btn = new JButton(text);
-        btn.setBackground(COLOR_BUTTON);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btn.setAlignmentX(LEFT_ALIGNMENT);
-        btn.setPreferredSize(new Dimension(88, height));
-        btn.setMinimumSize(new Dimension(88, height));
-        btn.setMaximumSize(new Dimension(Short.MAX_VALUE, height));
-        return btn;
-    }
- 
-    //ส่วนเลือกห้อง(ตรงกลาง)
-    private JPanel createMainPanel() {
-        pnlMain = new JPanel(new BorderLayout());
-        pnlMain.setBackground(COLOR_BG);
- 
-        lblTitle = new JLabel("Select Room", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblTitle.setForeground(Color.WHITE);
-        lblTitle.setBorder(BorderFactory.createEmptyBorder(40, 0, 18, 0));
-        pnlMain.add(lblTitle, BorderLayout.NORTH);
- 
-        pnlRooms = new JPanel(new GridLayout(3, 2, 37, 18));
-        pnlRooms.setBackground(COLOR_BG);
-        pnlRooms.setBorder(BorderFactory.createEmptyBorder(0, 36, 49, 35));
- 
-        String[] roomNames = {"101", "102", "103", "104", "105", "106"};
-        roomButtons = new JButton[roomNames.length];
- 
-        for (int i = 0; i < roomNames.length; i++) {
-            JButton btn = new JButton(roomNames[i]);
-            btn.setBackground(COLOR_BUTTON);
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 18));
-            btn.addActionListener(e -> onRoomClicked(btn.getText()));
-            roomButtons[i] = btn;
-            pnlRooms.add(btn);
-        }
- 
-        pnlMain.add(pnlRooms, BorderLayout.CENTER);
-        return pnlMain;
-    }
- 
-    //จัดการ event
-    private void onBookingClicked() {
-        //ไปหน้า Booking
-    }
- 
-    private void onGuestClicked() {
-        //ไปหน้า Guest
-    }
- 
-    private void onRoomMenuClicked() {
-        //อยู่หน้า Room อยู่แล้ว
-    }
- 
-    private void onRoomClicked(String roomNumber) {
-        //กดจองห้องแล้วไปหน้า Booking (ส่งเลขห้องไปด้วย)
+
+
+    // เมื่อกดห้อง
+    private void onRoomClicked(
+            String roomNumber) {
         System.out.println("เลือกห้อง " + roomNumber);
     }
 }

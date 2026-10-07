@@ -9,6 +9,7 @@ import java.util.List;
 public class Admin extends JFrame
 {
     private JTable bookingTable;
+    private JPanel Bg;
     private DefaultTableModel tableModel;
     private String adminEmail;
 
@@ -22,9 +23,14 @@ public class Admin extends JFrame
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+        Bg = new JPanel(new BorderLayout());
+        Bg.setBackground(new Color(13, 31, 35));
+        setContentPane(Bg);
+
         // Header Label
         JLabel headerLabel = new JLabel("Booking Records Dashboard", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        headerLabel.setForeground(Color.WHITE);
         headerLabel.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
         add(headerLabel, BorderLayout.NORTH);
 
@@ -48,7 +54,8 @@ public class Admin extends JFrame
 
         // Panel ปุ่มด้านล่าง
         JPanel bottomPanel = new JPanel();
-        
+        bottomPanel.setBackground(new Color(13, 31, 35));
+
         JButton btnRefresh = new JButton("Refresh Data");
         btnRefresh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnRefresh.addActionListener(e -> loadBookingData());

@@ -197,7 +197,7 @@ public class Booking extends JFrame
         // TOTAL
         totalLabel = new JLabel("Total 0 Baht");
         totalLabel.setForeground(Color.WHITE);
-        totalLabel.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 18));
+        totalLabel.setFont(new Font("Segoe UI", Font.BOLD , 18));
 
         gbc.gridx = 2;
         gbc.gridy = 3;
@@ -225,7 +225,19 @@ public class Booking extends JFrame
 
         // BUTTON EVENTS
         confirmButton.addActionListener(e -> confirmBooking());
+        roomButton.addActionListener(e -> {
+        JFrame roomFrame = new JFrame("KU Hotel @Room");
+        roomFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        roomFrame.add(new Room());
+
+        roomFrame.setSize(900, 600);
+        roomFrame.setLocationRelativeTo(null);
+        roomFrame.setResizable(false);
+        roomFrame.setVisible(true);
+
+        this.dispose();
+    });
        
     }
 
