@@ -58,6 +58,7 @@ public class Admin extends JFrame
 
         JButton btnRefresh = new JButton("Refresh Data");
         btnRefresh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnRefresh.setBackground(Color.GREEN);
         btnRefresh.addActionListener(e -> loadBookingData());
 
         JButton btnDelete = new JButton("Delete Selected");
