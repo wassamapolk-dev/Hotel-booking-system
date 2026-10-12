@@ -64,28 +64,28 @@ public class Booking extends JFrame
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
         bookingButton = new JButton("Booking");
-        guestButton = new JButton("GUEST");
+       // guestButton = new JButton("GUEST");
         roomButton = new JButton("ROOM");
 
         bookingButton.setMaximumSize(new Dimension(175, 83));
-        guestButton.setMaximumSize(new Dimension(175, 83));
+       // guestButton.setMaximumSize(new Dimension(175, 83));
         roomButton.setMaximumSize(new Dimension(175, 83));
 
         bookingButton.setBackground(new Color(105, 129, 141));
-        guestButton.setBackground(new Color(105, 129, 141));
+       // guestButton.setBackground(new Color(105, 129, 141));
         roomButton.setBackground(new Color(105, 129, 141));
 
         bookingButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        guestButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
+       // guestButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
         roomButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
 
         bookingButton.setForeground(Color.WHITE);
-        guestButton.setForeground(Color.WHITE);
+       // guestButton.setForeground(Color.WHITE);
         roomButton.setForeground(Color.WHITE);
 
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         bookingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        guestButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+       // guestButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         roomButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panelMenu.add(Box.createVerticalStrut(45));
@@ -93,8 +93,8 @@ public class Booking extends JFrame
         panelMenu.add(Box.createVerticalStrut(80));
         panelMenu.add(bookingButton);
         panelMenu.add(Box.createVerticalStrut(18));
-        panelMenu.add(guestButton);
-        panelMenu.add(Box.createVerticalStrut(18));
+       // panelMenu.add(guestButton);
+       // panelMenu.add(Box.createVerticalStrut(18));
         panelMenu.add(roomButton);
 
         // ขวา BOOKING
@@ -201,6 +201,19 @@ public class Booking extends JFrame
         updateTotalLabel();
     }
 
+    public Booking(String userEmail, LocalDate checkInDate, LocalDate checkOutDate, String roomNumber)
+    {
+        this(userEmail, checkInDate, checkOutDate);
+        switch (roomNumber)
+        {
+            case "101": selectedRoom = "101(Single Room) 1000 Bath"; break;
+            case "102": selectedRoom = "102 1500 Bath"; break;
+            case "103": selectedRoom = "103 2000 Bath"; break;
+            default:    selectedRoom = roomNumber; break;
+        }
+        updateTotalLabel();
+    }
+
     // เปิดหน้า Room
     private void openRoomPage()
     {
@@ -267,7 +280,7 @@ public class Booking extends JFrame
 
         totalLabel.setText("Total " + total + " Baht");
 
-        Backend.BookingService.saveBookingToCSV(this.userEmail, name, room, night, total);
+        Backend.BookingService.saveBookingToCSV(this.userEmail, name, room, night, total, checkInDate, checkOutDate);
         Backend.BookingService.sendEmailSimulation(this.userEmail, name, room, night, total);
 
         JOptionPane.showMessageDialog(this, "Booking Successful!\n"
@@ -277,5 +290,7 @@ public class Booking extends JFrame
                 + "Night: " + night + "\n"
                 + "Total: " + total + " Baht",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        openRoomPage();
     }
 }

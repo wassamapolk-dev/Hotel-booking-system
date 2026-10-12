@@ -17,13 +17,17 @@ public class Room extends JPanel {
     private JPanel pnlRooms;
     private JLabel lblHotel;
     private JLabel lblTitle;
+
     private JButton btnBooking;
     private JButton btnGuest;
     private JButton btnRoom;
     private JButton[] roomButtons;
+
     private String userEmail;
+
     private JTextField checkInField;
     private JTextField checkOutField;
+    
     private LocalDate checkInDate = LocalDate.now();
     private LocalDate checkOutDate = LocalDate.now().plusDays(1);
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -66,18 +70,14 @@ public class Room extends JPanel {
         lblHotel.setAlignmentX(CENTER_ALIGNMENT);
  
         btnBooking = createMenuButton("Booking", 83);
-        btnGuest = createMenuButton("Guest", 83);
         btnRoom = createMenuButton("Room", 83);
  
         btnBooking.addActionListener(e -> onBookingClicked());
-        btnGuest.addActionListener(e -> onGuestClicked());
         btnRoom.addActionListener(e -> onRoomMenuClicked());
  
         pnlMenu.add(lblHotel);
         pnlMenu.add(Box.createRigidArea(new Dimension(0, 80)));
         pnlMenu.add(btnBooking);
-        pnlMenu.add(Box.createRigidArea(new Dimension(0, 18)));
-        pnlMenu.add(btnGuest);
         pnlMenu.add(Box.createRigidArea(new Dimension(0, 18)));
         pnlMenu.add(btnRoom);
         pnlMenu.add(Box.createVerticalGlue());
@@ -164,6 +164,7 @@ public class Room extends JPanel {
         }
  
         pnlMain.add(pnlRooms, BorderLayout.CENTER);
+        updateRoomColors();
         return pnlMain;
     }
  
@@ -232,6 +233,7 @@ public class Room extends JPanel {
                             checkOutDate = thisBtnDate;
                             checkOutField.setText(checkOutDate.format(dateFormatter));
                         }
+                        updateRoomColors();
                         dialog.dispose();
                     });
                     daysPanel.add(dayBtn);
@@ -281,6 +283,28 @@ public class Room extends JPanel {
  
     private void onRoomClicked(String roomNumber) {
         //กดจองห้องแล้วไปหน้า Booking (ส่งเลขห้องไปด้วย)
-        System.out.println("เลือกห้อง " + roomNumber);
+        if (!checkOutDate.isAfter(checkInDate)) {
+            JOptionPane.showMessageDialog(this, "Check-out date must be after Check-in date!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (Backend.BookingService.isRoomBooked(roomNumber, checkInDate, checkOutDate)) {
+            JOptionPane.showMessageDialog(this, "Room " + roomNumber + " is already booked for these dates.", "Unavailable", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Booking bookingFrame = new Booking(userEmail, checkInDate, checkOutDate, roomNumber);
+        bookingFrame.setVisible(true);
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window != null) window.dispose();
+    }
+
+    // ปุ่มห้องที่ถูกจองในช่วงวันที่เลือกให้เป็นสีแดง
+    private void updateRoomColors() {
+        for (JButton btn : roomButtons) {
+            if (Backend.BookingService.isRoomBooked(btn.getText(), checkInDate, checkOutDate)) {
+                btn.setBackground(new Color(223, 57, 49));
+            } else {
+                btn.setBackground(COLOR_BUTTON);
+            }
+        }
     }
 }
