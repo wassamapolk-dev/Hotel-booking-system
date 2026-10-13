@@ -3,12 +3,8 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Booking extends JFrame 
 {
@@ -21,19 +17,17 @@ public class Booking extends JFrame
 
     private JLabel title;
     private JLabel nameLabel;
-    private JLabel roomLabel;
-    private JLabel checkInLabel;
-    private JLabel checkOutLabel;
+    private JLabel PhoneLabel;
     private JLabel totalLabel;
 
     private JTextField nameField;
     
-    private JTextField checkInField;
-    private JTextField checkOutField;
     private LocalDate checkInDate = LocalDate.now();
     private LocalDate checkOutDate = LocalDate.now().plusDays(1);
 
-    private JComboBox<String> roomComboBox;
+    private JTextField PhoeField;
+
+    private String selectedRoom = "101(Single Room) 1000 Bath";
 
     private JButton confirmButton;
     private JButton bookingButton;
@@ -66,36 +60,28 @@ public class Booking extends JFrame
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
         bookingButton = new JButton("Booking");
-        guestButton = new JButton("GUEST");
         roomButton = new JButton("ROOM");
 
         bookingButton.setMaximumSize(new Dimension(175, 83));
-        guestButton.setMaximumSize(new Dimension(175, 83));
         roomButton.setMaximumSize(new Dimension(175, 83));
 
         bookingButton.setBackground(new Color(105, 129, 141));
-        guestButton.setBackground(new Color(105, 129, 141));
         roomButton.setBackground(new Color(105, 129, 141));
 
         bookingButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        guestButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
         roomButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
 
         bookingButton.setForeground(Color.WHITE);
-        guestButton.setForeground(Color.WHITE);
         roomButton.setForeground(Color.WHITE);
 
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         bookingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        guestButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         roomButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panelMenu.add(Box.createVerticalStrut(45));
         panelMenu.add(title);
         panelMenu.add(Box.createVerticalStrut(80));
         panelMenu.add(bookingButton);
-        panelMenu.add(Box.createVerticalStrut(18));
-        panelMenu.add(guestButton);
         panelMenu.add(Box.createVerticalStrut(18));
         panelMenu.add(roomButton);
 
@@ -106,6 +92,34 @@ public class Booking extends JFrame
 
         GridBagConstraints gbc = new GridBagConstraints();
 
+        // 1. เพิ่มปุ่ม Logout ไว้มุมขวาบนสุด
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.setBackground(new Color(180, 60, 60));
+        btnLogout.setForeground(Color.WHITE);
+        btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLogout.setFocusPainted(false);
+
+        btnLogout.addActionListener(e -> {
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                this.dispose();
+
+                JFrame loginFrame = new JFrame("KU Hotel - Login");
+                loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                loginFrame.setContentPane(new GUI.Login());
+                loginFrame.pack();
+                loginFrame.setLocationRelativeTo(null);
+                loginFrame.setVisible(true);
+            }
+        });
+
+        GridBagConstraints gbcTopRight = new GridBagConstraints();
+        gbcTopRight.gridx = 2;
+        gbcTopRight.gridy = 0;
+        gbcTopRight.anchor = GridBagConstraints.NORTHEAST;
+        gbcTopRight.insets = new Insets(10, 10, 0, 10);
+        panelBooking.add(btnLogout, gbcTopRight);
+
         // TITLE
         JLabel bookingTitle = new JLabel("Book a Room");
         bookingTitle.setForeground(Color.WHITE);
@@ -113,7 +127,7 @@ public class Booking extends JFrame
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 4;
+        gbc.gridwidth = 2;
         gbc.insets = new Insets(0, 0, 20, 0);
         panelBooking.add(bookingTitle, gbc);
 
@@ -136,93 +150,32 @@ public class Booking extends JFrame
         gbc.anchor = GridBagConstraints.WEST;
         panelBooking.add(nameField, gbc);
 
-        // ROOM
-        roomLabel = new JLabel("Room :");
-        roomLabel.setForeground(Color.WHITE);
-        roomLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        // PHONE
+        PhoneLabel = new JLabel("Phone :");
+        PhoneLabel.setForeground(Color.WHITE);
+        PhoneLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
-        roomComboBox = new JComboBox<>();
-        roomComboBox.addItem("101(Single Room) 1000 Bath");
-        roomComboBox.addItem("102(Twin Room) 1500 Bath");
-        roomComboBox.addItem("103(Double Room)  2000 Bath");
-        roomComboBox.setPreferredSize(new Dimension(279, 25));
+        PhoeField = new JTextField(25);
+        PhoeField.setPreferredSize(new Dimension(279, 25));
 
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
-        panelBooking.add(roomLabel, gbc);
+        panelBooking.add(PhoneLabel, gbc);
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        panelBooking.add(roomComboBox, gbc);
-
-        // CHECK-IN
-        checkInLabel = new JLabel("Check-in :");
-        checkInLabel.setForeground(Color.WHITE);
-        checkInLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
-
-        JPanel checkInPanel = new JPanel(new BorderLayout(5, 0));
-        checkInPanel.setOpaque(false);
-        checkInPanel.setPreferredSize(new Dimension(279, 25));
-
-        checkInField = new JTextField(checkInDate.format(dateFormatter));
-        checkInField.setEditable(false);
-        checkInField.setBackground(Color.WHITE);
-
-        JButton btnCalIn = new JButton("📅");
-        btnCalIn.setMargin(new Insets(0, 2, 0, 2));
-        btnCalIn.addActionListener(e -> openCalendarPicker(true));
-
-        checkInPanel.add(checkInField, BorderLayout.CENTER);
-        checkInPanel.add(btnCalIn, BorderLayout.EAST);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.EAST;
-        panelBooking.add(checkInLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        panelBooking.add(checkInPanel, gbc);
-
-        // CHECK-OUT
-        checkOutLabel = new JLabel("Check-out :");
-        checkOutLabel.setForeground(Color.WHITE);
-        checkOutLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
-
-        JPanel checkOutPanel = new JPanel(new BorderLayout(5, 0));
-        checkOutPanel.setOpaque(false);
-        checkOutPanel.setPreferredSize(new Dimension(279, 25));
-
-        checkOutField = new JTextField(checkOutDate.format(dateFormatter));
-        checkOutField.setEditable(false);
-        checkOutField.setBackground(Color.WHITE);
-
-        JButton btnCalOut = new JButton("📅");
-        btnCalOut.setMargin(new Insets(0, 2, 0, 2));
-        btnCalOut.addActionListener(e -> openCalendarPicker(false));
-
-        checkOutPanel.add(checkOutField, BorderLayout.CENTER);
-        checkOutPanel.add(btnCalOut, BorderLayout.EAST);
-
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.anchor = GridBagConstraints.EAST;
-        panelBooking.add(checkOutLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        panelBooking.add(checkOutPanel, gbc);
+        panelBooking.add(PhoeField, gbc);
 
         // TOTAL
         totalLabel = new JLabel("Total 0 Baht");
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 18));
 
-        gbc.gridx = 2;
+        gbc.gridx = 1;
         gbc.gridy = 3;
-        gbc.gridheight = 2;
-        gbc.insets = new Insets(10, 20, 10, 10);
+        gbc.gridheight = 1;
+        gbc.insets = new Insets(10, 10, 10, 10);
         panelBooking.add(totalLabel, gbc);
 
         // CONFIRM BUTTON
@@ -244,8 +197,9 @@ public class Booking extends JFrame
         add(panelBooking, BorderLayout.CENTER);
 
         // LISTENERS
-        roomComboBox.addActionListener(e -> updateTotalLabel());
+        PhoeField.addActionListener(e -> updateTotalLabel());
         confirmButton.addActionListener(e -> confirmBooking());
+        roomButton.addActionListener(e -> openRoomPage());
 
         updateTotalLabel();
     }
@@ -255,99 +209,41 @@ public class Booking extends JFrame
         this("guest@ku.th");
     }
 
-    // --- POPUP ปฏิทินเลือกวันที่แบบรูปที่ 2 ---
-    private void openCalendarPicker(boolean isCheckIn) 
+    public Booking(String userEmail, LocalDate checkInDate, LocalDate checkOutDate)
     {
-        JDialog dialog = new JDialog(this, isCheckIn ? "Select Check-in Date" : "Select Check-out Date", true);
-        dialog.setSize(320, 300);
-        dialog.setLocationRelativeTo(this);
-        dialog.setLayout(new BorderLayout());
+        this(userEmail);
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        updateTotalLabel();
+    }
 
-        final LocalDate[] currentDisplay = { isCheckIn ? checkInDate : checkOutDate };
+    public Booking(String userEmail, LocalDate checkInDate, LocalDate checkOutDate, String roomNumber)
+    {
+        this(userEmail, checkInDate, checkOutDate);
+        switch (roomNumber)
+        {
+            case "101": selectedRoom = "101 1000 Bath"; break;
+            case "102": selectedRoom = "102 1500 Bath"; break;
+            case "103": selectedRoom = "103 2000 Bath"; break;
+            case "104": selectedRoom = "104 1000 Bath"; break;
+            case "105": selectedRoom = "105 2000 Bath"; break;
+            case "106": selectedRoom = "106 3000 Bath"; break;
+            default:    selectedRoom = roomNumber; break;
+        }
+        updateTotalLabel();
+    }
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(new Color(240, 243, 246));
-        JButton prevBtn = new JButton("<");
-        JButton nextBtn = new JButton(">");
-        JLabel monthLabel = new JLabel("", SwingConstants.CENTER);
-        monthLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-
-        headerPanel.add(prevBtn, BorderLayout.WEST);
-        headerPanel.add(monthLabel, BorderLayout.CENTER);
-        headerPanel.add(nextBtn, BorderLayout.EAST);
-
-        JPanel daysPanel = new JPanel(new GridLayout(0, 7, 3, 3));
-        daysPanel.setBackground(Color.WHITE);
-
-        Runnable renderCalendar = new Runnable() {
-            public void run() {
-                daysPanel.removeAll();
-                monthLabel.setText(currentDisplay[0].getMonth().toString() + " " + currentDisplay[0].getYear());
-
-                String[] headers = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
-                for (String h : headers) {
-                    JLabel lbl = new JLabel(h, SwingConstants.CENTER);
-                    lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
-                    lbl.setForeground(Color.GRAY);
-                    daysPanel.add(lbl);
-                }
-
-                YearMonth ym = YearMonth.of(currentDisplay[0].getYear(), currentDisplay[0].getMonth());
-                LocalDate firstOfMonth = ym.atDay(1);
-                int dayOfWeek = firstOfMonth.getDayOfWeek().getValue(); // 1 = Mon, 7 = Sun
-
-                for (int i = 1; i < dayOfWeek; i++) {
-                    daysPanel.add(new JLabel(""));
-                }
-
-                int daysInMonth = ym.lengthOfMonth();
-                for (int day = 1; day <= daysInMonth; day++) {
-                    final int d = day;
-                    JButton dayBtn = new JButton(String.valueOf(day));
-                    dayBtn.setMargin(new Insets(2, 2, 2, 2));
-                    dayBtn.setFocusPainted(false);
-                    dayBtn.setBackground(Color.WHITE);
-
-                    LocalDate thisBtnDate = ym.atDay(day);
-                    LocalDate selectedTarget = isCheckIn ? checkInDate : checkOutDate;
-                    if (thisBtnDate.equals(selectedTarget)) {
-                        dayBtn.setBackground(new Color(230, 160, 60)); // วงไฮไลท์สีส้มแบบในรูป 2
-                        dayBtn.setForeground(Color.WHITE);
-                    }
-
-                    dayBtn.addActionListener(e -> {
-                        if (isCheckIn) {
-                            checkInDate = thisBtnDate;
-                            checkInField.setText(checkInDate.format(dateFormatter));
-                        } else {
-                            checkOutDate = thisBtnDate;
-                            checkOutField.setText(checkOutDate.format(dateFormatter));
-                        }
-                        updateTotalLabel();
-                        dialog.dispose();
-                    });
-                    daysPanel.add(dayBtn);
-                }
-                daysPanel.revalidate();
-                daysPanel.repaint();
-            }
-        };
-
-        prevBtn.addActionListener(e -> {
-            currentDisplay[0] = currentDisplay[0].minusMonths(1);
-            renderCalendar.run();
-        });
-
-        nextBtn.addActionListener(e -> {
-            currentDisplay[0] = currentDisplay[0].plusMonths(1);
-            renderCalendar.run();
-        });
-
-        renderCalendar.run();
-
-        dialog.add(headerPanel, BorderLayout.NORTH);
-        dialog.add(daysPanel, BorderLayout.CENTER);
-        dialog.setVisible(true);
+    // เปิดหน้า Room
+    private void openRoomPage()
+    {
+        JFrame roomFrame = new JFrame("KU Hotel @Room " + userEmail);
+        roomFrame.setSize(1044, 600);
+        roomFrame.setResizable(false);
+        roomFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        roomFrame.setLocationRelativeTo(null);
+        roomFrame.add(new Room(userEmail, checkInDate, checkOutDate));
+        roomFrame.setVisible(true);
+        dispose();
     }
 
     private int calculateNights() 
@@ -364,12 +260,15 @@ public class Booking extends JFrame
             return;
         }
 
-        String room = roomComboBox.getSelectedItem().toString();
+        String room = selectedRoom;
         int price = 0;
 
         if (room.startsWith("101")) price = 1000;
         else if (room.startsWith("102")) price = 1500;
         else if (room.startsWith("103")) price = 2000;
+        else if (room.startsWith("104")) price = 1000;
+        else if (room.startsWith("105")) price = 2000;
+        else if (room.startsWith("106")) price = 3000;
 
         int total = price * night;
         totalLabel.setText("Total " + total + " Baht");
@@ -378,9 +277,9 @@ public class Booking extends JFrame
     private void confirmBooking() 
     {
         String name = nameField.getText();
-        String room = roomComboBox.getSelectedItem().toString();
+        String room = selectedRoom;
 
-        if (name.isEmpty()) 
+        if (name.isEmpty() || PhoeField.getText().trim().isEmpty()) 
         {
             JOptionPane.showMessageDialog(this, "Please fill in all information.");
             return;
@@ -398,19 +297,25 @@ public class Booking extends JFrame
         if (room.startsWith("101")) price = 1000;
         else if (room.startsWith("102")) price = 1500;
         else if (room.startsWith("103")) price = 2000;
+        else if (room.startsWith("104")) price = 1000;
+        else if (room.startsWith("105")) price = 2000;
+        else if (room.startsWith("106")) price = 3000;
 
         int total = price * night;
 
         totalLabel.setText("Total " + total + " Baht");
 
-        Backend.BookingService.saveBookingToCSV(this.userEmail, name, room, night, total);
+        Backend.BookingService.saveBookingToCSV(this.userEmail, name, room, night, total, checkInDate, checkOutDate);
         Backend.BookingService.sendEmailSimulation(this.userEmail, name, room, night, total);
 
         JOptionPane.showMessageDialog(this, "Booking Successful!\n"
                 + "Name: " + name + "\n"
+                + "Phone: " + PhoeField.getText().trim() + "\n"
                 + "Room: " + room + "\n"
                 + "Night: " + night + "\n"
                 + "Total: " + total + " Baht",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        openRoomPage();
     }
 }

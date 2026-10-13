@@ -3,10 +3,6 @@ package GUI;
 import Backend.UserManager;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.concurrent.StructuredTaskScope.FailedException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Register extends JFrame 
@@ -16,16 +12,21 @@ public class Register extends JFrame
 
     private JFrame loginFrame;
     private JPanel Background;
+
     private JLabel titleLabel;
     private JLabel emailLabel;
-    private JTextField emailField;
-    private JLabel nameLabel;
-    private JTextField nameField;
     private JLabel passwordLabel;
-    private JPasswordField passwordField;
     private JLabel confirmPasswordLabel;
+    private JLabel nameLabel;
+
+    private JTextField emailField;
+    private JTextField nameField;
+    
+    private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
+
     private JButton approveButton;
+    private JButton backButton;
 
     public Register(JFrame loginFrame) 
     {
@@ -37,9 +38,8 @@ public class Register extends JFrame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null); // ให้หน้าต่างขึ้นตรงกลางจอ
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // ใช้ layout แบบ null คือเราจะกำหนดตำแหน่ง (x, y, กว้าง, สูง) ของทุกอย่างเอง
-        setLayout(null);
         addWindowListener(new java.awt.event.WindowAdapter() 
         {
             public void windowClosing(java.awt.event.WindowEvent e) 
@@ -60,61 +60,83 @@ public class Register extends JFrame
     private void buildForm() 
     {
 
+        // ใช้ GridBagLayout จัดทุกอย่างให้อยู่กลางจอ (เหมือนหน้า Login)
+        Background = new JPanel(new GridBagLayout());
+        Background.setBackground(new Color(13, 31, 35));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+
         // หัวข้อ "Register"
         titleLabel = new JLabel("Register");
         titleLabel.setForeground(Color.white);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        titleLabel.setBounds(180, 30, 200, 30);
-        add(titleLabel);
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 0, 30, 0);
+        Background.add(titleLabel, gbc);
+
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(4, 0, 4, 0);
 
         // ช่อง E-mail
         emailLabel = new JLabel("E-mail");
         emailLabel.setForeground(Color.white);
         emailLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        emailLabel.setBounds(100, 90, 100, 25);
-        add(emailLabel);
+        gbc.gridy = 1;
+        Background.add(emailLabel, gbc);
 
         emailField = new JTextField();
-        emailField.setBounds(100, 115, 280, 30);
-        add(emailField);
+        emailField.setPreferredSize(new Dimension(280, 30));
+        gbc.gridy = 2;
+        Background.add(emailField, gbc);
 
         // ช่อง Name
         nameLabel = new JLabel("Name");
         nameLabel.setForeground(Color.white);
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        nameLabel.setBounds(100, 155, 100, 25);
-        add(nameLabel);
+        gbc.gridy = 3;
+        Background.add(nameLabel, gbc);
 
         nameField = new JTextField();
-        nameField.setBounds(100, 180, 280, 30);
-        add(nameField);
+        nameField.setPreferredSize(new Dimension(280, 30));
+        gbc.gridy = 4;
+        Background.add(nameField, gbc);
 
         // ช่อง Password
         passwordLabel = new JLabel("Password");
         passwordLabel.setForeground(Color.white);
         passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        passwordLabel.setBounds(100, 220, 100, 25);
-        add(passwordLabel);
+        gbc.gridy = 5;
+        Background.add(passwordLabel, gbc);
 
         passwordField = new JPasswordField();
-        passwordField.setBounds(100, 245, 280, 30);
-        add(passwordField);
+        passwordField.setPreferredSize(new Dimension(280, 30));
+        gbc.gridy = 6;
+        Background.add(passwordField, gbc);
 
         // ช่อง Confirm Password
         confirmPasswordLabel = new JLabel("Confirm Password");
         confirmPasswordLabel.setForeground(Color.white);
         confirmPasswordLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        confirmPasswordLabel.setBounds(100, 285, 150, 25);
-        add(confirmPasswordLabel);
+        gbc.gridy = 7;
+        Background.add(confirmPasswordLabel, gbc);
 
         confirmPasswordField = new JPasswordField();
-        confirmPasswordField.setBounds(100, 310, 280, 30);
-        add(confirmPasswordField);
+        confirmPasswordField.setPreferredSize(new Dimension(280, 30));
+        gbc.gridy = 8;
+        Background.add(confirmPasswordField, gbc);
 
         // ปุ่ม APPROVE
         approveButton = new JButton("APPROVE");
         approveButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        approveButton.setBounds(160, 370, 160, 40);
+        approveButton.setPreferredSize(new Dimension(105, 40));
+
+        //ปุ่มBack
+        backButton = new JButton("Back");
+        backButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        backButton.setPreferredSize(new Dimension(90, 40));
+
 
         approveButton.addActionListener(e -> {
             String email = emailField.getText();
@@ -146,8 +168,10 @@ public class Register extends JFrame
                 return;
             }
 
-            // JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
+      
 
+            // JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
+            
             boolean isSaved = UserManager.saveUser(email, name, password);
 
             if (isSaved) 
@@ -171,14 +195,23 @@ public class Register extends JFrame
                 JOptionPane.showMessageDialog(this, "Failed to save user data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        backButton.addActionListener(e -> {
+            if (loginFrame != null) loginFrame.setVisible(true);
+            dispose();
+        });
 
-        add(approveButton);
+        // รวมปุ่มapproveButton,backButton
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(approveButton);
+        buttonPanel.add(backButton);
 
-        Background = new JPanel();
-        Background.setBackground(new Color(0, 51, 102));
-        Background.setBounds(0, 0, 500, 500);
-        Background.setLayout(null);
-        add(Background);
+        gbc.gridy = 9;
+        gbc.insets = new Insets(30, 0, 10, 0);
+        gbc.anchor = GridBagConstraints.CENTER;
+        Background.add(buttonPanel, gbc);
+
+        add(Background, BorderLayout.CENTER);
 
     }
 

@@ -1,1 +1,2 @@
-Email, Name, RoomType, Night, TotalPrice, BookinkDate
+Email,Name,RoomNumber,Night,TotalPrice,BookingDate,CheckInDate,CheckOutDate
+

@@ -37,7 +37,7 @@ public class Login extends JPanel
         btnLogin = new JButton();
         btnRegister = new JButton();
 
-        setBackground(new Color(0, 51, 102));
+        setBackground(new Color(13, 31, 35));
         setPreferredSize(new Dimension(500, 500));
 
         jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 36));
@@ -151,8 +151,13 @@ public class Login extends JPanel
         // 2. ถ้าไม่ใช่ Admin ค่อยเช็กว่าใช่ User ทั่วไปหรือไม่ (จาก user.csv)
         else if (Backend.UserManager.checkLogin(email, password)) 
         {
-            Booking bookingFrame = new Booking(email);
-            bookingFrame.setVisible(true);
+            JFrame roomFrame = new JFrame("KU Hotel @Room " + email);
+            roomFrame.setSize(1044, 600);
+            roomFrame.setResizable(false);
+            roomFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            roomFrame.setLocationRelativeTo(null);
+            roomFrame.add(new Room(email));
+            roomFrame.setVisible(true);
         
             Window window = SwingUtilities.getWindowAncestor(this);
             if (window != null) 
