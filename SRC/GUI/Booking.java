@@ -3,6 +3,8 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -83,6 +85,8 @@ public class Booking extends JFrame
         panelMenu.add(Box.createVerticalStrut(80));
         panelMenu.add(bookingButton);
         panelMenu.add(Box.createVerticalStrut(18));
+       // panelMenu.add(guestButton);
+       // panelMenu.add(Box.createVerticalStrut(18));
         panelMenu.add(roomButton);
 
         // ขวา BOOKING
