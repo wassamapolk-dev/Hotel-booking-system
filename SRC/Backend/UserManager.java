@@ -3,35 +3,32 @@ package Backend;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.jar.Attributes.Name;
 
 public class UserManager 
 {
-    private static final String FILE_NAME = "data/user.csv";
+    private static final String FILE_NAME = "data/user.csv"; 
 
-    //เอาไว้เช้ค การLogin ที่user ใส่ข้อมูลถูกต้องมั้ย
+    // ตรวจสอบการเข้าสู่ระบบว่า Email/Password ตรงกับในฐานข้อมูลCSVมั้ย
     public static boolean checkLogin(String email, String password)
     {
-        File file = new File("data/user.csv");
-        if (!file.exists()) 
+        File file = new File(FILE_NAME);
+        if (!file.exists()) return false; // ถ้าไม่มีไฟล์ข้อมูลให้คืนค่า false
+
+        try
         {
-            return false;
-        }
-            try 
-        {
-            List<String> lines = Files.readAllLines(Paths.get(FILE_NAME));
-            for (int i = 1; i < lines.size(); i++) 
+            List<String> lines = Files.readAllLines(Paths.get(FILE_NAME)); // อ่านข้อมูลทุกบรรทัดจากไฟล์ user.csv
+            for (int i = 1; i < lines.size(); i++) // ข้ามบรรทัด Header (i=0) บรรทัดเเรกสุดของ user.csv
             {
-                String[] row = lines.get(i).split(",");
+                String[] row = lines.get(i).split(","); // แยกข้อมูลด้วยเครื่องหมาย ,
                 if (row.length >= 3) 
                 {
-                    String savedEmail = row [0].trim();
-                    String savedName = row[1].trim();
+                    String savedEmail = row[0].trim();
                     String savedPassword = row[2].trim();
                     
+                    // เปรียบเทียบ Email (ไม่สนตัวพิมพ์เล็ก/ใหญ่) และ Password
                     if(savedEmail.equalsIgnoreCase(email) && savedPassword.equalsIgnoreCase(password))
                     {
-                        return true;
+                        return true; 
                     }
                 }    
             }
@@ -40,9 +37,10 @@ public class UserManager
         {
             e.printStackTrace();
         }
-        return false;
+        return false; 
     }
 
+    // ตรวจสอบว่า Email นี้มีในระบบอยู่แล้วหรือไม่
     public static boolean isEmailExists(String email)
     {
         try 
@@ -53,10 +51,9 @@ public class UserManager
                 String[] row = lines.get(i).split(",");
                 if (row.length >= 1) 
                 {
-                    String savedEmail = row [0].trim();         
-                    if (savedEmail.equalsIgnoreCase(email)) 
+                    if (row[0].trim().equalsIgnoreCase(email)) 
                     {
-                        return true;
+                        return true; 
                     }
                 }    
             }
@@ -65,18 +62,23 @@ public class UserManager
         {
             e.printStackTrace();
         }
-        return false;
+        return false; 
     }
 
-    //อันนี้เอาไว้บันทึกข้อมูลUser
+    // บันทึกข้อมูลสมาชิกใหม่ลงไฟล์ user.csv 
     public static boolean saveUser(String email, String name, String password)
     {
-        try 
+        File file = new File("data/user.csv");
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file, true)))
         {
-            FileWriter fw = new FileWriter(FILE_NAME,true);
-            BufferedWriter bw = new BufferedWriter(fw);
+             // หากเป็นไฟล์ใหม่ ให้สร้าง Header ก่อน
+            if (file.length() == 0)
+            {
+                bw.write("Email, Name, Password");
+                bw.newLine();
+            }
 
-            bw.write(email + "," + name + "," + password);
+            bw.write(email + "," + name + "," + password); // เขียนข้อมูลคั่นด้วย ,
             bw.newLine();
             bw.close();
 
@@ -88,5 +90,4 @@ public class UserManager
             return false;
         }
     }
-
 }

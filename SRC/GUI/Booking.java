@@ -3,15 +3,11 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Booking extends JFrame 
 {
-
-    // Components
     private String userEmail;
 
     private JPanel panelMenu;
@@ -29,7 +25,7 @@ public class Booking extends JFrame
 
     private JTextField PhoeField;
 
-    private String selectedRoom = "101(Single Room) 1000 Bath";
+    private String selectedRoom = "101(Single Room) 1000 Bath"; // ค่าเริ่มต้นของห้องพัก
 
     private JButton confirmButton;
     private JButton bookingButton;
@@ -38,11 +34,12 @@ public class Booking extends JFrame
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    // Constructor รับเฉพาะ userEmail
     public Booking(String userEmail) 
     {
         this.userEmail = userEmail;
 
-        // JFrame
+        // ตั้งค่าหน้าต่าง JFrame หลัก
         setTitle("KU Hotel @Booking " + userEmail);
         setSize(1044, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +48,7 @@ public class Booking extends JFrame
 
         setLayout(new BorderLayout());
 
-        // ซ้าย MENU
+        // --- ด้านซ้าย MENU ---
         panelMenu = new JPanel();
         panelMenu.setBackground(new Color(13, 31, 35));
         panelMenu.setPreferredSize(new Dimension(270, 600));
@@ -85,27 +82,27 @@ public class Booking extends JFrame
         panelMenu.add(Box.createVerticalStrut(80));
         panelMenu.add(bookingButton);
         panelMenu.add(Box.createVerticalStrut(18));
-       // panelMenu.add(guestButton);
-       // panelMenu.add(Box.createVerticalStrut(18));
         panelMenu.add(roomButton);
 
-        // ขวา BOOKING
+        // --- ด้านขวา BOOKING FORM ---
         panelBooking = new JPanel();
         panelBooking.setBackground(new Color(19, 46, 53));
         panelBooking.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        // 1. เพิ่มปุ่ม Logout ไว้มุมขวาบนสุด
+        // ปุ่ม Logout มุมขวาบนสุด
         JButton btnLogout = new JButton("Logout");
         btnLogout.setBackground(new Color(180, 60, 60));
         btnLogout.setForeground(Color.WHITE);
         btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnLogout.setFocusPainted(false);
 
-        btnLogout.addActionListener(e -> {
+        btnLogout.addActionListener(e -> 
+        {
             int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
+            if (choice == JOptionPane.YES_OPTION) 
+            {
                 this.dispose();
 
                 JFrame loginFrame = new JFrame("KU Hotel - Login");
@@ -124,7 +121,7 @@ public class Booking extends JFrame
         gbcTopRight.insets = new Insets(10, 10, 0, 10);
         panelBooking.add(btnLogout, gbcTopRight);
 
-        // TITLE
+        // TITLE ของหน้าจอบันทึกจอง
         JLabel bookingTitle = new JLabel("Book a Room");
         bookingTitle.setForeground(Color.WHITE);
         bookingTitle.setFont(new Font("Segoe UI", Font.BOLD, 30));
@@ -135,7 +132,7 @@ public class Booking extends JFrame
         gbc.insets = new Insets(0, 0, 20, 0);
         panelBooking.add(bookingTitle, gbc);
 
-        // NAME
+        // ช่องกรอก Name
         nameLabel = new JLabel("Name :");
         nameLabel.setForeground(Color.WHITE);
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -154,7 +151,7 @@ public class Booking extends JFrame
         gbc.anchor = GridBagConstraints.WEST;
         panelBooking.add(nameField, gbc);
 
-        // PHONE
+        // ช่องกรอก Phone
         PhoneLabel = new JLabel("Phone :");
         PhoneLabel.setForeground(Color.WHITE);
         PhoneLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -171,7 +168,7 @@ public class Booking extends JFrame
         gbc.anchor = GridBagConstraints.WEST;
         panelBooking.add(PhoeField, gbc);
 
-        // TOTAL
+        // ข้อความแสดงราคารวม (Total Price)
         totalLabel = new JLabel("Total 0 Baht");
         totalLabel.setForeground(Color.WHITE);
         totalLabel.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 18));
@@ -182,7 +179,7 @@ public class Booking extends JFrame
         gbc.insets = new Insets(10, 10, 10, 10);
         panelBooking.add(totalLabel, gbc);
 
-        // CONFIRM BUTTON
+        // ปุ่ม Confirm Booking
         confirmButton = new JButton("Confirm Booking");
         confirmButton.setBackground(new Color(105, 129, 141));
         confirmButton.setForeground(Color.WHITE);
@@ -200,12 +197,12 @@ public class Booking extends JFrame
         add(panelMenu, BorderLayout.WEST);
         add(panelBooking, BorderLayout.CENTER);
 
-        // LISTENERS
+        // LISTENERS สำหรับจัดการเหตุการณ์ต่างๆ
         PhoeField.addActionListener(e -> updateTotalLabel());
         confirmButton.addActionListener(e -> confirmBooking());
         roomButton.addActionListener(e -> openRoomPage());
 
-        updateTotalLabel();
+        updateTotalLabel(); // คำนวณยอดเงินเริ่มต้น
     }
 
     public Booking()
@@ -213,6 +210,7 @@ public class Booking extends JFrame
         this("guest@ku.th");
     }
 
+    // Constructor รับวันที่ Check-in / Check-out
     public Booking(String userEmail, LocalDate checkInDate, LocalDate checkOutDate)
     {
         this(userEmail);
@@ -221,6 +219,7 @@ public class Booking extends JFrame
         updateTotalLabel();
     }
 
+    // Constructor รับวันที่และหมายเลขห้องพักพร้อมแปลงประเภทห้องอัตโนมัติ
     public Booking(String userEmail, LocalDate checkInDate, LocalDate checkOutDate, String roomNumber)
     {
         this(userEmail, checkInDate, checkOutDate);
@@ -237,7 +236,7 @@ public class Booking extends JFrame
         updateTotalLabel();
     }
 
-    // เปิดหน้า Room
+    // สลับไปยังหน้าเลือกห้องพัก (Room)
     private void openRoomPage()
     {
         JFrame roomFrame = new JFrame("KU Hotel @Room " + userEmail);
@@ -250,11 +249,13 @@ public class Booking extends JFrame
         dispose();
     }
 
+    // คำนวณจำนวนคืนพักผ่าน ChronoUnit.DAYS
     private int calculateNights() 
     {
         return (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
     }
 
+    // คำนวณราคารวมและอัปเดตบน Label หน้าจอ
     private void updateTotalLabel() 
     {
         int night = calculateNights();
@@ -278,11 +279,13 @@ public class Booking extends JFrame
         totalLabel.setText("Total " + total + " Baht");
     }
 
+    // Method ยืนยันการจอง: บันทึกลง CSV และส่งอีเมลจำลอง
     private void confirmBooking() 
     {
         String name = nameField.getText();
         String room = selectedRoom;
 
+        // ตรวจสอบช่องว่าง
         if (name.isEmpty() || PhoeField.getText().trim().isEmpty()) 
         {
             JOptionPane.showMessageDialog(this, "Please fill in all information.");
@@ -309,17 +312,20 @@ public class Booking extends JFrame
 
         totalLabel.setText("Total " + total + " Baht");
 
+        // เรียกใช้ Backend เพื่อบันทึกข้อมูลการจองและส่งข้อความจำลองเข้า Inbox
         Backend.BookingService.saveBookingToCSV(this.userEmail, name, room, night, total, checkInDate, checkOutDate);
-        Backend.BookingService.sendEmailSimulation(this.userEmail, name, room, night, total);
+        Backend.BookingService.sendEmailSimulation(this.userEmail, name, room, night, checkInDate, checkOutDate, total);
 
         JOptionPane.showMessageDialog(this, "Booking Successful!\n"
                 + "Name: " + name + "\n"
                 + "Phone: " + PhoeField.getText().trim() + "\n"
                 + "Room: " + room + "\n"
+                + "CheckIn: " + checkInDate + "\n"
+                + "CheckOut: " + checkOutDate + "\n"
                 + "Night: " + night + "\n"
                 + "Total: " + total + " Baht",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        openRoomPage();
+        openRoomPage(); // เมื่อจองเสร็จเปลี่ยนกลับไปยังหน้า Room
     }
 }

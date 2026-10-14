@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
+// แสดงผลหน้าจอเลือกห้องพักและระบุช่วงวันที่จอง (Check-in/Check-out)
 public class Room extends JPanel {
  
     private static final Color COLOR_BG = new Color(19, 46, 53);
@@ -28,36 +29,44 @@ public class Room extends JPanel {
     private JTextField checkInField;
     private JTextField checkOutField;
     
+    // ตั้งค่าเริ่มต้นของวันที่ Check-in เป็นวันนี้ และ Check-out เป็นวันถัดไป
     private LocalDate checkInDate = LocalDate.now();
     private LocalDate checkOutDate = LocalDate.now().plusDays(1);
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
  
-    public Room() {
+    // Overloaded Constructors รองรับรูปแบบการสร้างแบบต่างๆ
+    public Room() 
+    {
         this("guest@ku.th");
     }
 
-    public Room(String userEmail) {
+    public Room(String userEmail) 
+    {
         this.userEmail = userEmail;
         initUI();
     }
 
-    public Room(String userEmail, LocalDate checkInDate, LocalDate checkOutDate) {
+    public Room(String userEmail, LocalDate checkInDate, LocalDate checkOutDate) 
+    {
         this.userEmail = userEmail;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         initUI();
     }
  
-    private void initUI() {
+    // Method สร้างโครงสร้าง UI ของหน้าห้องพัก
+    private void initUI() 
+    {
         setLayout(new BorderLayout());
         setBackground(COLOR_BG);
  
-        add(createMenuPanel(), BorderLayout.WEST);
-        add(createMainPanel(), BorderLayout.CENTER);
+        add(createMenuPanel(), BorderLayout.WEST); // เมนูด้านซ้าย
+        add(createMainPanel(), BorderLayout.CENTER); // ส่วนเลือกห้องพักตรงกลาง
     }
  
-    // ปุ่มทางซ้าย
-    private JPanel createMenuPanel() {
+    // สร้าง Side Menu แถบซ้ายมือ
+    private JPanel createMenuPanel() 
+    {
         pnlMenu = new JPanel();
         pnlMenu.setBackground(COLOR_MENU);
         pnlMenu.setLayout(new BoxLayout(pnlMenu, BoxLayout.Y_AXIS));
@@ -85,7 +94,9 @@ public class Room extends JPanel {
         return pnlMenu;
     }
  
-    private JButton createMenuButton(String text, int height) {
+    // Helper Method สำหรับสร้างปุ่มใน Side Menu
+    private JButton createMenuButton(String text, int height) 
+    {
         JButton btn = new JButton(text);
         btn.setBackground(COLOR_BUTTON);
         btn.setForeground(Color.WHITE);
@@ -96,8 +107,9 @@ public class Room extends JPanel {
         return btn;
     }
  
-    // ส่วนเลือกห้อง (ตรงกลาง)
-    private JPanel createMainPanel() {
+    // ส่วนแสดงผลหลักสำหรับเลือกห้องและวันที่ (ตรงกลาง)
+    private JPanel createMainPanel() 
+    {
         pnlMain = new JPanel(new BorderLayout());
         pnlMain.setBackground(COLOR_BG);
  
@@ -117,14 +129,19 @@ public class Room extends JPanel {
         btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnLogout.setFocusPainted(false);
 
-        btnLogout.addActionListener(e -> {
+        // Listener จัดการปุ่ม Logout
+        btnLogout.addActionListener(e -> 
+        {
             int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
+            if (choice == JOptionPane.YES_OPTION) 
+            {
                 Window window = SwingUtilities.getWindowAncestor(this);
-                if (window != null) {
+                if (window != null) 
+                {
                     window.dispose();
                 }
 
+                // สลับกลับไปเปิดหน้า Login ใหม่
                 JFrame loginFrame = new JFrame("KU Hotel - Login");
                 loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 loginFrame.setContentPane(new GUI.Login());
@@ -136,7 +153,7 @@ public class Room extends JPanel {
 
         pnlHeaderBar.add(btnLogout);
 
-        // วันที่ Check-in / Check-out (อยู่ใต้ Select Room)
+        // แถบเลือกวันที่ Check-in / Check-out พร้อมปุ่มเปิด Pop-up ปฏิทิน
         JPanel pnlDates = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         pnlDates.setBackground(COLOR_BG);
         pnlDates.setBorder(BorderFactory.createEmptyBorder(0, 0, 18, 0));
@@ -149,7 +166,7 @@ public class Room extends JPanel {
         checkInField.setBackground(Color.WHITE);
         JButton btnCalIn = new JButton("📅");
         btnCalIn.setMargin(new Insets(0, 2, 0, 2));
-        btnCalIn.addActionListener(e -> openCalendarPicker(true));
+        btnCalIn.addActionListener(e -> openCalendarPicker(true)); // เปิดปฏิทิน Check-in
 
         JLabel checkOutLabel = new JLabel("Check-out :");
         checkOutLabel.setForeground(Color.WHITE);
@@ -159,7 +176,7 @@ public class Room extends JPanel {
         checkOutField.setBackground(Color.WHITE);
         JButton btnCalOut = new JButton("📅");
         btnCalOut.setMargin(new Insets(0, 2, 0, 2));
-        btnCalOut.addActionListener(e -> openCalendarPicker(false));
+        btnCalOut.addActionListener(e -> openCalendarPicker(false)); // เปิดปฏิทิน Check-out
 
         pnlDates.add(checkInLabel);
         pnlDates.add(checkInField);
@@ -176,6 +193,7 @@ public class Room extends JPanel {
         pnlTop.add(pnlDates);
         pnlMain.add(pnlTop, BorderLayout.NORTH);
  
+        // แสดงรายการปุ่มเลือกห้องพักแบบ Grid 3x2
         pnlRooms = new JPanel(new GridLayout(3, 2, 37, 18));
         pnlRooms.setBackground(COLOR_BG);
         pnlRooms.setBorder(BorderFactory.createEmptyBorder(0, 36, 49, 35));
@@ -183,7 +201,8 @@ public class Room extends JPanel {
         String[] roomNames = {"101", "102", "103", "104", "105", "106"};
         roomButtons = new JButton[roomNames.length];
  
-        for (int i = 0; i < roomNames.length; i++) {
+        for (int i = 0; i < roomNames.length; i++) 
+        {
             JButton btn = new JButton(roomNames[i]);
             btn.setBackground(COLOR_BUTTON);
             btn.setForeground(Color.WHITE);
@@ -194,12 +213,13 @@ public class Room extends JPanel {
         }
  
         pnlMain.add(pnlRooms, BorderLayout.CENTER);
-        updateRoomColors();
+        updateRoomColors(); // อัปเดตสีของปุ่มห้องตามสถานะการจอง
         return pnlMain;
     }
 
-    // --- POPUP ปฏิทินเลือกวันที่ ---
-    private void openCalendarPicker(boolean isCheckIn) {
+    // POPUP ปฏิทินเลือกวันที่ (Custom Calendar Dialog)
+    private void openCalendarPicker(boolean isCheckIn)
+    {
         Window owner = SwingUtilities.getWindowAncestor(this);
         JDialog dialog = new JDialog(owner, isCheckIn ? "Select Check-in Date" : "Select Check-out Date", Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setSize(320, 300);
@@ -222,13 +242,17 @@ public class Room extends JPanel {
         JPanel daysPanel = new JPanel(new GridLayout(0, 7, 3, 3));
         daysPanel.setBackground(Color.WHITE);
 
-        Runnable renderCalendar = new Runnable() {
-            public void run() {
+        // Runnable สำหรับ Re-render ปฏิทินใหม่เมื่อสลับเดือน
+        Runnable renderCalendar = new Runnable() 
+        {
+            public void run() 
+            {
                 daysPanel.removeAll();
                 monthLabel.setText(currentDisplay[0].getMonth().toString() + " " + currentDisplay[0].getYear());
 
                 String[] headers = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
-                for (String h : headers) {
+                for (String h : headers) 
+                {
                     JLabel lbl = new JLabel(h, SwingConstants.CENTER);
                     lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
                     lbl.setForeground(Color.GRAY);
@@ -238,11 +262,13 @@ public class Room extends JPanel {
                 YearMonth ym = YearMonth.of(currentDisplay[0].getYear(), currentDisplay[0].getMonth());
                 int dayOfWeek = ym.atDay(1).getDayOfWeek().getValue();
 
-                for (int i = 1; i < dayOfWeek; i++) {
+                for (int i = 1; i < dayOfWeek; i++) 
+                {
                     daysPanel.add(new JLabel(""));
                 }
 
-                for (int day = 1; day <= ym.lengthOfMonth(); day++) {
+                for (int day = 1; day <= ym.lengthOfMonth(); day++) 
+                {
                     JButton dayBtn = new JButton(String.valueOf(day));
                     dayBtn.setMargin(new Insets(2, 2, 2, 2));
                     dayBtn.setFocusPainted(false);
@@ -250,20 +276,26 @@ public class Room extends JPanel {
 
                     LocalDate thisBtnDate = ym.atDay(day);
                     LocalDate selectedTarget = isCheckIn ? checkInDate : checkOutDate;
-                    if (thisBtnDate.equals(selectedTarget)) {
-                        dayBtn.setBackground(new Color(230, 160, 60));
+                    if (thisBtnDate.equals(selectedTarget)) 
+                    {
+                        dayBtn.setBackground(new Color(230, 160, 60)); // ไฮไลต์วันที่เลือกอยู่
                         dayBtn.setForeground(Color.WHITE);
                     }
 
-                    dayBtn.addActionListener(e -> {
-                        if (isCheckIn) {
+                    // เมื่อคลิกเลือกวันที่ในปฏิทิน
+                    dayBtn.addActionListener(e -> 
+                    {
+                        if (isCheckIn) 
+                        {
                             checkInDate = thisBtnDate;
                             checkInField.setText(checkInDate.format(dateFormatter));
-                        } else {
+                        } 
+                        else 
+                        {
                             checkOutDate = thisBtnDate;
                             checkOutField.setText(checkOutDate.format(dateFormatter));
                         }
-                        updateRoomColors();
+                        updateRoomColors(); // อัปเดตสีสถานะห้องตามช่วงวันที่เปลี่ยนไป
                         dialog.dispose();
                     });
                     daysPanel.add(dayBtn);
@@ -273,12 +305,14 @@ public class Room extends JPanel {
             }
         };
 
-        prevBtn.addActionListener(e -> {
+        prevBtn.addActionListener(e -> 
+        {
             currentDisplay[0] = currentDisplay[0].minusMonths(1);
             renderCalendar.run();
         });
 
-        nextBtn.addActionListener(e -> {
+        nextBtn.addActionListener(e -> 
+        {
             currentDisplay[0] = currentDisplay[0].plusMonths(1);
             renderCalendar.run();
         });
@@ -290,9 +324,11 @@ public class Room extends JPanel {
         dialog.setVisible(true);
     }
 
-    // จัดการ event
-    private void onBookingClicked() {
-        if (!checkOutDate.isAfter(checkInDate)) {
+    // จัดการ Event เมื่อกดเมนู Booking
+    private void onBookingClicked() 
+    {
+        if (!checkOutDate.isAfter(checkInDate)) 
+        {
             JOptionPane.showMessageDialog(this, "Check-out date must be after Check-in date!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -302,36 +338,49 @@ public class Room extends JPanel {
         if (window != null) window.dispose();
     }
 
-    private void onGuestClicked() {
-        // ไปหน้า Guest
+    private void onGuestClicked() 
+    {
+        // เมนู Guest (สำรองเผื่อต่อเติมระบบ)
     }
 
-    private void onRoomMenuClicked() {
-        // อยู่หน้า Room อยู่แล้ว
+    private void onRoomMenuClicked() 
+    {
+        // เมนู Room ปัจจุบัน
     }
 
-    private void onRoomClicked(String roomNumber) {
-        if (!checkOutDate.isAfter(checkInDate)) {
+    // จัดการ Event เมื่อคลิกปุ่มห้องพักแต่ละห้อง
+    private void onRoomClicked(String roomNumber) 
+    {
+        if (!checkOutDate.isAfter(checkInDate)) 
+        {
             JOptionPane.showMessageDialog(this, "Check-out date must be after Check-in date!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (Backend.BookingService.isRoomBooked(roomNumber, checkInDate, checkOutDate)) {
+        // เช็กกับ Backend ว่าห้องนี้ว่างหรือไม่
+        if (Backend.BookingService.isRoomBooked(roomNumber, checkInDate, checkOutDate)) 
+        {
             JOptionPane.showMessageDialog(this, "Room " + roomNumber + " is already booked for these dates.", "Unavailable", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        // หากห้องว่าง ให้เปิดหน้า Booking พร้อมส่งหมายเลขห้องไป
         Booking bookingFrame = new Booking(userEmail, checkInDate, checkOutDate, roomNumber);
         bookingFrame.setVisible(true);
         Window window = SwingUtilities.getWindowAncestor(this);
         if (window != null) window.dispose();
     }
 
-    // ปุ่มห้องที่ถูกจองในช่วงวันที่เลือกให้เป็นสีแดง
-    private void updateRoomColors() {
-        for (JButton btn : roomButtons) {
-            if (Backend.BookingService.isRoomBooked(btn.getText(), checkInDate, checkOutDate)) {
-                btn.setBackground(new Color(223, 57, 49));
-            } else {
-                btn.setBackground(COLOR_BUTTON);
+    // ตรวจสอบและอัปเดตสีปุ่มห้องพัก: หากห้องถูกจองแล้วเปลี่ยนเป็นสีแดง
+    private void updateRoomColors() 
+    {
+        for (JButton btn : roomButtons) 
+        {
+            if (Backend.BookingService.isRoomBooked(btn.getText(), checkInDate, checkOutDate)) 
+            {
+                btn.setBackground(new Color(223, 57, 49)); // สีแดงเมื่อไม่ว่าง
+            } 
+            else 
+            {
+                btn.setBackground(COLOR_BUTTON); // สีปกติ
             }
         }
     }

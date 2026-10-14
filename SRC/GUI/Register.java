@@ -7,10 +7,9 @@ import java.util.logging.Logger;
 
 public class Register extends JFrame 
 {
-
     private static final Logger logger = Logger.getLogger(Register.class.getName());
 
-    private JFrame loginFrame;
+    private JFrame loginFrame; // อ้างอิงหน้า Login เพื่อส่งกลับเมื่อสมัครเสร็จหรือยกเลิก
     private JPanel Background;
 
     private JLabel titleLabel;
@@ -30,16 +29,16 @@ public class Register extends JFrame
 
     public Register(JFrame loginFrame) 
     {
-
-        this.loginFrame = loginFrame; // เพื่มมาเพื่อให้ใช้เเยกหน้า login กับ register ได้
+        this.loginFrame = loginFrame;
 
         setTitle("Register");
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
-        setLocationRelativeTo(null); // ให้หน้าต่างขึ้นตรงกลางจอ
+        setLocationRelativeTo(null); // จัดตำแหน่งกึ่งกลางหน้าจอ
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        // เพิ่ม WindowListener เพื่อแสดงหน้า Login อีกครั้งหากผู้ใช้กดปิดหน้าต่าง Register
         addWindowListener(new java.awt.event.WindowAdapter() 
         {
             public void windowClosing(java.awt.event.WindowEvent e) 
@@ -51,16 +50,13 @@ public class Register extends JFrame
             }
         });
 
-        buildForm();
+        buildForm(); // เรียกใช้ Method สร้างฟอร์ม
     }
 
-    /**
-     * สร้างช่องกรอกข้อมูลและปุ่มทั้งหมด
-     */
+    //Method สำหรับสร้างช่องกรอกข้อมูลและปุ่มดำเนินการทั้งหมด
     private void buildForm() 
     {
-
-        // ใช้ GridBagLayout จัดทุกอย่างให้อยู่กลางจอ (เหมือนหน้า Login)
+        // จัด Layout หน้าจอด้วย GridBagLayout เพื่อให้อยู่กึ่งกลางหน้าจอ
         Background = new JPanel(new GridBagLayout());
         Background.setBackground(new Color(13, 31, 35));
 
@@ -79,7 +75,7 @@ public class Register extends JFrame
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(4, 0, 4, 0);
 
-        // ช่อง E-mail
+        // ช่องกรอก E-mail
         emailLabel = new JLabel("E-mail");
         emailLabel.setForeground(Color.white);
         emailLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -91,7 +87,7 @@ public class Register extends JFrame
         gbc.gridy = 2;
         Background.add(emailField, gbc);
 
-        // ช่อง Name
+        // ช่องกรอก Name
         nameLabel = new JLabel("Name");
         nameLabel.setForeground(Color.white);
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -103,7 +99,7 @@ public class Register extends JFrame
         gbc.gridy = 4;
         Background.add(nameField, gbc);
 
-        // ช่อง Password
+        // ช่องกรอก Password
         passwordLabel = new JLabel("Password");
         passwordLabel.setForeground(Color.white);
         passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -115,7 +111,7 @@ public class Register extends JFrame
         gbc.gridy = 6;
         Background.add(passwordField, gbc);
 
-        // ช่อง Confirm Password
+        // ช่องกรอก Confirm Password
         confirmPasswordLabel = new JLabel("Confirm Password");
         confirmPasswordLabel.setForeground(Color.white);
         confirmPasswordLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -127,63 +123,64 @@ public class Register extends JFrame
         gbc.gridy = 8;
         Background.add(confirmPasswordField, gbc);
 
-        // ปุ่ม APPROVE
+        // สร้างปุ่มยืนยันและปุ่มย้อนกลับ
         approveButton = new JButton("APPROVE");
         approveButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         approveButton.setPreferredSize(new Dimension(105, 40));
 
-        //ปุ่มBack
         backButton = new JButton("Back");
         backButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         backButton.setPreferredSize(new Dimension(90, 40));
 
-
-        approveButton.addActionListener(e -> {
+        // Listener จัดการเหตุการณ์เมื่อกดปุ่ม APPROVE
+        approveButton.addActionListener(e -> 
+        {
             String email = emailField.getText();
             String name = nameField.getText();
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
 
+            // ตรวจสอบว่ากรอกข้อมูลครบทุกช่องหรือไม่
             if (email.isEmpty() || name.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) 
             {
                 JOptionPane.showMessageDialog(this, "Please fill in all the information.!!!", "Alert",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
+            // ตรวจสอบว่า Password ทั้งสองช่องตรงกันหรือไม่
             if (!password.equals(confirmPassword)) 
             {
                 JOptionPane.showMessageDialog(this, "Passwords do not match.", "Alert PAssword",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
+            // ตรวจสอบว่า Email ถูกใช้ไปแล้วหรือยัง
             if (UserManager.isEmailExists(email)) 
             {
                 JOptionPane.showMessageDialog(this, "Email is already registered", "Alert",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
+            // ตรวจสอบว่า Name ถูกใช้ไปแล้วหรือยัง
             if (UserManager.isEmailExists(name)) 
             {
                 JOptionPane.showMessageDialog(this, "Name is already registered", "Alert", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-      
-
-            // JOptionPane.showMessageDialog(this,"Success","Success",JOptionPane.INFORMATION_MESSAGE);
-            
+            // บันทึกข้อมูลสมาชิกลงฐานข้อมูล CSV ผ่าน Backend.UserManager
             boolean isSaved = UserManager.saveUser(email, name, password);
 
             if (isSaved) 
             {
-                // Clear ค่าในช่องเมื่อสมัครเสร็จ
-
+                // เคลียร์ค่าในช่องกรอกเมื่อลงทะเบียนสำเร็จ
                 emailField.setText("");
                 nameField.setText("");
                 passwordField.setText("");
                 confirmPasswordField.setText("");
                 JOptionPane.showMessageDialog(this, "Register Success", "Success", JOptionPane.INFORMATION_MESSAGE);
 
+                // สลับกลับไปหน้า Login และปิดหน้า Register
                 if (loginFrame != null) 
                 {
                     loginFrame.setVisible(true);
@@ -195,12 +192,15 @@ public class Register extends JFrame
                 JOptionPane.showMessageDialog(this, "Failed to save user data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-        backButton.addActionListener(e -> {
+
+        // Listener สำหรับปุ่ม ย้อนกลับ (Back)
+        backButton.addActionListener(e -> 
+        {
             if (loginFrame != null) loginFrame.setVisible(true);
             dispose();
         });
 
-        // รวมปุ่มapproveButton,backButton
+        // รวมปุ่ม APPROVE และ Back ไว้ใน Panel เดียวกัน
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         buttonPanel.setOpaque(false);
         buttonPanel.add(approveButton);
@@ -212,7 +212,5 @@ public class Register extends JFrame
         Background.add(buttonPanel, gbc);
 
         add(Background, BorderLayout.CENTER);
-
     }
-
 }

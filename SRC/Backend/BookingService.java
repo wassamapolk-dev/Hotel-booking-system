@@ -7,20 +7,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class BookingService {
+public class BookingService 
+{
 
-    // บันทึกข้อมูลการจองลง booking.csv (เพิ่ม CheckIn, CheckOut ท้ายแถว)
-    public static void saveBookingToCSV(String email, String name, String roomNumber, int night, int totalPrice,
-                                        LocalDate checkIn, LocalDate checkOut)
+    // บันทึกรายละเอียดการจองลงไฟล์ booking.csv
+    public static void saveBookingToCSV(String email, String name, String roomNumber, int night, int totalPrice, LocalDate checkIn, LocalDate checkOut)
     {
         File file = new File("data/booking.csv");
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true)))
         {
+            // หากเป็นไฟล์ใหม่ ให้สร้าง Header ก่อน
             if (file.length() == 0)
             {
                 bw.write("Email,Name,RoomNumber,Night,TotalPrice,BookingDate,CheckInDate,CheckOutDate");
                 bw.newLine();
             }
+            // บันทึกข้อมูลการจองพร้อมวันที่ทำรายการ
             String dateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             bw.write(email + "," + name + "," + roomNumber + "," + night + "," + totalPrice + "," + dateStr
                     + "," + checkIn + "," + checkOut);
@@ -32,7 +34,7 @@ public class BookingService {
         }
     }
 
-    // เช็กว่าห้องถูกจองในช่วงวันที่เลือกหรือไม่
+    // ตรวจสอบว่าห้องพักถูกจองไปแล้วในช่วงวันที่เลือกหรือไม่
     public static boolean isRoomBooked(String roomNumber, LocalDate checkIn, LocalDate checkOut)
     {
         File file = new File("data/booking.csv");
@@ -44,24 +46,25 @@ public class BookingService {
             for (int i = 1; i < lines.size(); i++)
             {
                 String[] d = lines.get(i).split(",");
-                if (d.length < 8) continue;                        // แถวเก่าที่ไม่มีวัน check-in/out
-                if (!d[2].trim().startsWith(roomNumber)) continue; // เช่น "101(Single Room) 1000 Bath"
+                if (d.length < 8) continue; // ข้ามแถวที่รูปแบบไม่ถูกต้อง
+                if (!d[2].trim().startsWith(roomNumber)) continue; // เช็กเฉพาะห้องที่สนใจ
 
                 LocalDate bookedIn = LocalDate.parse(d[6].trim());
                 LocalDate bookedOut = LocalDate.parse(d[7].trim());
 
-                if (bookedIn.isBefore(checkOut) && checkIn.isBefore(bookedOut)) return true;
+                // เงื่อนไขตรวจสอบช่วงเวลาคาบเกี่ยวกัน (Date Overlapping Condition)
+                if (bookedIn.isBefore(checkOut) && checkIn.isBefore(bookedOut)) return true; // มีคนจองแล้ว[cite: 7]
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return false;
+        return false; // ห้องยังว่าง
     }
 
-    // จำลองการส่งอีเมล (สร้างไฟล์ Receipt/Inbox)
-    public static void sendEmailSimulation(String email, String name, String room, int night, int total)
+    // จำลองการส่งอีเมลยืนยันการจองด้วยการเขียนไฟล์ข้อความลงไดเรกทอรี data/emails/
+    public static void sendEmailSimulation(String email, String name, String room, int night, LocalDate checkIn, LocalDate checkOut, int total)
     {
         File dir = new File("data/emails");
         if (!dir.exists()) dir.mkdirs();
@@ -79,6 +82,8 @@ public class BookingService {
             writer.write("Dear " + name + ",\n\n");
             writer.write("Thank you for your booking with KU Hotel!\n");
             writer.write("Room Type : " + room + "\n");
+            writer.write("Check-in  : " + checkIn + "\n");
+            writer.write("Check-out : " + checkOut + "\n");
             writer.write("Nights    : " + night + "\n");
             writer.write("Total     : " + total + " THB\n\n");
             writer.write("We look forward to welcoming you.\n");
