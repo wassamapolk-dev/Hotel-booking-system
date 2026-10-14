@@ -7,7 +7,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 // แสดงผลหน้าจอเลือกห้องพักและระบุช่วงวันที่จอง (Check-in/Check-out)
-public class Room extends JPanel {
+public class Room extends JPanel 
+{
  
     private static final Color COLOR_BG = new Color(19, 46, 53);
     private static final Color COLOR_MENU = new Color(13, 31, 35);
@@ -46,6 +47,21 @@ public class Room extends JPanel {
         initUI();
     }
 
+    /**
+     * Constructor สำหรับระบุผู้ใช้งานและช่วงวันที่ต้องการเข้าพัก
+     * 
+     * @param userEmail อีเมลผู้ใช้งาน (ต้องเป็น String ที่ไม่ว่างเปล่า)
+     * @param checkInDate วันที่ Check-in (ต้องไม่เป็น null)
+     * @param checkOutDate วันที่ Check-out (ต้องมากกว่า checkInDate อย่างน้อย 1 วัน)
+     * @return void
+     * @throws Exception หากระบบวาด UI หรือดึงข้อมูลสถานะห้องพักล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - ผู้ใช้งานเข้าสู่ระบบสำเร็จและมี userEmail ที่ระบุได้
+     * 
+     * Post-conditions:
+     *   - หน้าต่าง UI แสดงผลรายการห้องพัก (101-106) พร้อมสีปุ่มที่อัปเดตตามสถานะจริงของวันที่เลือก
+    */
     public Room(String userEmail, LocalDate checkInDate, LocalDate checkOutDate) 
     {
         this.userEmail = userEmail;
@@ -217,7 +233,20 @@ public class Room extends JPanel {
         return pnlMain;
     }
 
-    // POPUP ปฏิทินเลือกวันที่ (Custom Calendar Dialog)
+    /**
+     * POPUP ปฏิทินเลือกวันที่ (Custom Calendar Dialog)
+     * เปิดหน้าต่าง Pop-up ปฏิทินเพื่อเลือกวันที่ Check-in หรือ Check-out
+     * 
+     * @param isCheckIn booleanต้องระบุว่าต้องการเลือกวัน Check-in (true) หรือ Check-out (false)
+     * @return void
+     * @throws Exception หากปฏิทินวาด Modal Dialog ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - Userกดคลิกปุ่ม Calender ของช่อง Check-in หรือ Check-out
+     * 
+     * Post-conditions:
+     *   - เมื่อ User เลือกวันที่ในปฏิทิน: ตัวแปร checkInDate หรือ checkOutDate จะถูกอัปเดต และเรียก updateRoomColors() เพื่อรีเฟรชสีสถานะห้องพักทันที
+    */
     private void openCalendarPicker(boolean isCheckIn)
     {
         Window owner = SwingUtilities.getWindowAncestor(this);
@@ -348,7 +377,20 @@ public class Room extends JPanel {
         // เมนู Room ปัจจุบัน
     }
 
-    // จัดการ Event เมื่อคลิกปุ่มห้องพักแต่ละห้อง
+    /**
+     * จัดการ Event เมื่อคลิกปุ่มห้องพักแต่ละห้อง
+     * 
+     * @param roomNumber หมายเลขห้องพัก (เช่น "101", "102")
+     * @return void
+     * @throws JOptionPaneException แสดง Pop-up เตือนเมื่อวันที่ผิด หรือห้องพักไม่ว่าง
+     * 
+     * Pre-conditions:
+     *   - checkOutDate ต้องเป็นวันที่มาหลัง checkInDate
+     * 
+     * Post-conditions:
+     *   - ถ้าห้องพักว่างในช่วงวันที่เลือก: Open GUI.Booking พร้อมส่งข้อมูล userEmail, ช่วงวันที่ และ roomNumber แล้วปิดหน้า Room ปัจจุบัน
+     *   - ถ้าห้องพักถูกจองแล้ว: แสดง Pop-up Warning แจ้งว่าห้องไม่ว่าง
+    */
     private void onRoomClicked(String roomNumber) 
     {
         if (!checkOutDate.isAfter(checkInDate)) 
@@ -369,7 +411,20 @@ public class Room extends JPanel {
         if (window != null) window.dispose();
     }
 
-    // ตรวจสอบและอัปเดตสีปุ่มห้องพัก: หากห้องถูกจองแล้วเปลี่ยนเป็นสีแดง
+    /**
+     * ตรวจสอบและอัปเดตสีปุ่มห้องพัก: หากห้องถูกจองแล้วเปลี่ยนเป็นสีแดง
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws Exception อ่านไฟล์ booking.csv เพื่อเช็กสถานะเกิดข้อผิดพลาด
+     * 
+     * Pre-conditions:
+     *   - Array roomButtonsถูกกำหนดค่า UI เรียบร้อยแล้ว
+     * 
+     * Post-conditions:
+     *   - ปุ่มห้องพักที่ถูกจองแล้วในช่วงวันที่เลือกจะเปลี่ยนเป็นสีแดง
+     *   - ปุ่มห้องพักที่ยังว่างจะคงสีปกติ 
+    */
     private void updateRoomColors() 
     {
         for (JButton btn : roomButtons) 

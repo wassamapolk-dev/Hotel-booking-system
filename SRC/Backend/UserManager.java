@@ -8,7 +8,20 @@ public class UserManager
 {
     private static final String FILE_NAME = "data/user.csv"; 
 
-    // ตรวจสอบการเข้าสู่ระบบว่า Email/Password ตรงกับในฐานข้อมูลCSVมั้ย
+    /**
+     * ตรวจสอบการเข้าสู่ระบบว่า Email/Password ตรงกับในฐานข้อมูลCSVมั้ย
+     * 
+     * @param email อีเมลที่ User ป้อน
+     * @param password รหัสผ่านที่ User ป้อน 
+     * @return boolean true หากการล็อกอินถูกต้อง, false หากไม่ถูกต้องหรือไฟล์ไม่พบ
+     * @throws Exception หากมีข้อผิดพลาดขณะอ่านไฟล์
+     * 
+     * Pre-conditions:
+     *   - ไฟล์ user.csv มีอยู่จริงในระบบ
+     * 
+     * Post-conditions:
+     *   - ระบบเปรียบเทียบข้อมูลใน CSV และคืนค่าผลลัพธ์โดยไม่มีการแก้ไขไฟล์
+    */
     public static boolean checkLogin(String email, String password)
     {
         File file = new File(FILE_NAME);
@@ -40,7 +53,19 @@ public class UserManager
         return false; 
     }
 
-    // ตรวจสอบว่า Email นี้มีในระบบอยู่แล้วหรือไม่
+    /**
+     * ตรวจสอบว่า Email นี้มีในระบบอยู่แล้วหรือไม่
+     * 
+     * @param email อีเมลที่ต้องการตรวจสอบความซ้ำซ้อน
+     * @return boolean true หากพบ Email นี้ซ้ำในระบบ, false หากยังไม่มี
+     * @throws Exception หากอ่านไฟล์ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - ไฟล์ user.csv มีอยู่จริง
+     * 
+     * Post-conditions:
+     *   - คืนค่าสถานะความซ้ำของ Email โดยไม่มีการเปลี่ยนแปลงข้อมูลในระบบ
+    */
     public static boolean isEmailExists(String email)
     {
         try 
@@ -65,7 +90,22 @@ public class UserManager
         return false; 
     }
 
-    // บันทึกข้อมูลสมาชิกใหม่ลงไฟล์ user.csv 
+    /**
+     * บันทึกข้อมูลสมาชิกใหม่ลงไฟล์ user.csv 
+     * 
+     * @param email อีเมลสมาชิกใหม่
+     * @param name ชื่อสมาชิกใหม่
+     * @param password รหัสผ่านสมาชิกใหม่
+     * @return boolean true ถ้าบันทึกสำเร็จ, false ถ้าเกิดข้อผิดพลาดในการเขียนไฟล์
+     * @throws IOException หากสร้างไฟล์หรือเขียนไฟล์ไม่ได้
+     * 
+     * Pre-conditions:
+     *   - ข้อมูลการสมัครผ่าน Validation ทั้งหมดเรียบร้อยแล้ว
+     * 
+     * Post-conditions:
+     *   - เพิ่มบรรทัดข้อมูลสมาชิกใหม่ต่อท้ายไฟล์ user.csv
+     *   - หากเป็นไฟล์ใหม่ จะทำการสร้าง Header "Email, Name, Password" ในบรรทัดแรก
+    */
     public static boolean saveUser(String email, String name, String password)
     {
         File file = new File("data/user.csv");

@@ -23,7 +23,7 @@ public class Booking extends JFrame
     private LocalDate checkInDate = LocalDate.now();
     private LocalDate checkOutDate = LocalDate.now().plusDays(1);
 
-    private JTextField PhoeField;
+    private JTextField PhoneField;
 
     private String selectedRoom = "101(Single Room) 1000 Bath"; // ค่าเริ่มต้นของห้องพัก
 
@@ -156,8 +156,8 @@ public class Booking extends JFrame
         PhoneLabel.setForeground(Color.WHITE);
         PhoneLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
-        PhoeField = new JTextField(25);
-        PhoeField.setPreferredSize(new Dimension(279, 25));
+        PhoneField = new JTextField(25);
+        PhoneField.setPreferredSize(new Dimension(279, 25));
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -166,7 +166,7 @@ public class Booking extends JFrame
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        panelBooking.add(PhoeField, gbc);
+        panelBooking.add(PhoneField, gbc);
 
         // ข้อความแสดงราคารวม (Total Price)
         totalLabel = new JLabel("Total 0 Baht");
@@ -198,7 +198,7 @@ public class Booking extends JFrame
         add(panelBooking, BorderLayout.CENTER);
 
         // LISTENERS สำหรับจัดการเหตุการณ์ต่างๆ
-        PhoeField.addActionListener(e -> updateTotalLabel());
+        PhoneField.addActionListener(e -> updateTotalLabel());
         confirmButton.addActionListener(e -> confirmBooking());
         roomButton.addActionListener(e -> openRoomPage());
 
@@ -219,7 +219,22 @@ public class Booking extends JFrame
         updateTotalLabel();
     }
 
-    // Constructor รับวันที่และหมายเลขห้องพักพร้อมแปลงประเภทห้องอัตโนมัติ
+    /**
+     * Constructor รับวันที่และหมายเลขห้องพักพร้อมแปลงประเภทห้องอัตโนมัติ
+     * 
+     * @param userEmail อีเมลผู้ใช้งานที่ทำการจอง
+     * @param checkInDate วันที่ Check-in
+     * @param checkOutDate วันที่ Check-out
+     * @param roomNumber หมายเลขห้องพักที่เลือก
+     * @return void
+     * @throws Exception หากสร้าง UI ไม่สำเร็จ
+     * 
+     * Pre-conditions:
+     *   - ได้รับข้อมูลผู้ใช้,วันที่พัก และห้องพักที่ต้องการจองจากหน้า GUI.Room
+     * 
+     * Post-conditions:
+     *   - แปลงหมายเลขห้องพักเป็นราคาต่อคืน และคำนวณราคารวม (Total Price)
+    */
     public Booking(String userEmail, LocalDate checkInDate, LocalDate checkOutDate, String roomNumber)
     {
         this(userEmail, checkInDate, checkOutDate);
@@ -249,7 +264,19 @@ public class Booking extends JFrame
         dispose();
     }
 
-    // คำนวณจำนวนคืนพักผ่าน ChronoUnit.DAYS
+    /**
+     * คำนวณจำนวนคืนพักผ่าน ChronoUnit.DAYS
+     * 
+     * @param ไม่มี
+     * @return int จำนวนคืนที่เข้าพัก
+     * @throws ArithmeticException กรณีเกิดข้อผิดพลาดในการคำนวณวันที่
+     * 
+     * Pre-conditions:
+     *   - checkInDate และ checkOutDate ต้องไม่เป็น null
+     * 
+     * Post-conditions:
+     *   - คำนวณความต่างวันด้วย ChronoUnit.DAYS และคืนค่าเป็นจำนวนคืน
+    */
     private int calculateNights() 
     {
         return (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
@@ -279,14 +306,29 @@ public class Booking extends JFrame
         totalLabel.setText("Total " + total + " Baht");
     }
 
-    // Method ยืนยันการจอง: บันทึกลง CSV และส่งอีเมลจำลอง
+    /**
+     * Method ยืนยันการจอง: บันทึกลง CSV และส่งอีเมลจำลอง
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws JOptionPaneException แสดง Pop-up ข้อผิดพลาดหากกรอกข้อมูลไม่สมบูรณ์
+     * 
+     * Pre-conditions:
+     *   - ช่อง nameField และ PhoneField ต้องไม่เป็นค่าว่าง
+     *   - checkOutDate ต้องเป็นวันที่มาหลัง checkInDate
+     * 
+     * Post-conditions:
+     *   - บันทึกแถวข้อมูลการจองลง booking.csv
+     *   - สร้างไฟล์ข้อความใบยืนยันใน data/emails/[email]_inbox.txt
+     *   - แสดง Pop-up แจ้งการจองสำเร็จ แล้วเปิดสลับกลับไปยังหน้า GUI.Room
+    */
     private void confirmBooking() 
     {
         String name = nameField.getText();
         String room = selectedRoom;
 
         // ตรวจสอบช่องว่าง
-        if (name.isEmpty() || PhoeField.getText().trim().isEmpty()) 
+        if (name.isEmpty() || PhoneField.getText().trim().isEmpty()) 
         {
             JOptionPane.showMessageDialog(this, "Please fill in all information.");
             return;
@@ -318,7 +360,7 @@ public class Booking extends JFrame
 
         JOptionPane.showMessageDialog(this, "Booking Successful!\n"
                 + "Name: " + name + "\n"
-                + "Phone: " + PhoeField.getText().trim() + "\n"
+                + "Phone: " + PhoneField.getText().trim() + "\n"
                 + "Room: " + room + "\n"
                 + "CheckIn: " + checkInDate + "\n"
                 + "CheckOut: " + checkOutDate + "\n"
