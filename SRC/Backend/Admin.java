@@ -5,7 +5,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Admin {
+public class Admin 
+{
 
     // เช็กล็อกอิน Admin
     public static boolean checkAdminLogin(String email, String password)
@@ -67,7 +68,8 @@ public class Admin {
             if (data.length >= 6) 
             {
                 // ข้าม Header แถวแรกถ้าเป็นคำว่า Email
-                if (i == 0 && data[0].equalsIgnoreCase("Email")) {
+                if (i == 0 && data[0].equalsIgnoreCase("Email")) 
+                {
                     continue;
                 }
                 bookingList.add(data);
@@ -87,7 +89,8 @@ public class Admin {
         List<String> updatedLines = new ArrayList<>();
 
         boolean hasHeader = false;
-        if (!lines.isEmpty() && lines.get(0).toLowerCase().startsWith("email")) {
+        if (!lines.isEmpty() && lines.get(0).toLowerCase().startsWith("email")) 
+        {
             hasHeader = true;
         }
 

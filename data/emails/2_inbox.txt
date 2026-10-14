@@ -1,0 +1,18 @@
+===============================================
+FROM: KU Hotel Reservation System <noreply@ku.hotel.com>
+TO: 2
+DATE: 2026-10-14 16:53:36
+SUBJECT: Booking Confirmation - KU.Hotel.com
+-----------------------------------------------
+Dear Aungpao,
+
+Thank you for your booking with KU Hotel!
+Room Type : 101 1000 Bath
+Nights    : 3
+Total     : 3000 THB
+
+We look forward to welcoming you.
+Best Regards,
+KU Hotel Team
+===============================================
+
