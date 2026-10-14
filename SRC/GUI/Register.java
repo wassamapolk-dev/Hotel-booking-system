@@ -27,6 +27,20 @@ public class Register extends JFrame
     private JButton approveButton;
     private JButton backButton;
 
+
+    /**
+     * Constructor สร้างหน้าต่างสมัครสมาชิก
+     * 
+     * @param loginFrame JFrameของหน้า Login
+     * @return void
+     * @throws HeadlessException หากระบบไม่รองรับการแสดงผลหน้าต่าง
+     * 
+     * Pre-conditions:
+     *   - loginFrame ถูกส่งมาจากหน้า Login เพื่อเก็บเป็น Reference ในการสลับหน้าต่างกลับ
+     * 
+     * Post-conditions:
+     *   - หน้าต่าง Register ถูกสร้างขึ้นเต็มจอ/กึ่งกลาง พร้อมผูก WindowListener ดักจับการปิดหน้าต่าง
+    */
     public Register(JFrame loginFrame) 
     {
         this.loginFrame = loginFrame;
@@ -53,7 +67,20 @@ public class Register extends JFrame
         buildForm(); // เรียกใช้ Method สร้างฟอร์ม
     }
 
-    //Method สำหรับสร้างช่องกรอกข้อมูลและปุ่มดำเนินการทั้งหมด
+    /**
+     * //Method สำหรับสร้างช่องกรอกข้อมูลและปุ่มดำเนินการทั้งหมด ตรวจสอบข้อมูลผู้ใช้และส่งบันทึกลงระบบ
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws JOptionPaneException แสดงแจ้งเตือนหาก Input ผิดเงื่อนไข หรือการบันทึกไฟล์ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - ช่องกรอก emailField, nameField, passwordField และ confirmPasswordField มีการป้อนข้อมูล
+     * 
+     * Post-conditions:
+     *   - หากข้อมูลถูกต้อง (ไม่ว่าง, Password ตรงกัน, Email และ Name ไม่ซ้ำ): บันทึกผู้ใช้ลง user.csv, เคลียร์ช่องข้อมูล, แสดง Pop-up Success, ปิดหน้า Register และสั่งแสดงหน้า loginFrame อีกครั้ง
+     *   - หากข้อมูลผิดพลาด: ไม่มีการบันทึกไฟล์ และแสดง Popup เตือนให้ผู้ใช้แก้ไข
+    */
     private void buildForm() 
     {
         // จัด Layout หน้าจอด้วย GridBagLayout เพื่อให้อยู่กึ่งกลางหน้าจอ

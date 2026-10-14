@@ -19,7 +19,18 @@ public class Login extends JPanel
     private JPasswordField txtPassword;
     private JToggleButton chkShowPassword;
 
-    // Constructor หลักของหน้า Login
+    /**
+     * Constructor หลักของหน้า Login
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws HeadlessException เครื่องที่รันไม่มีหน้าจอแสดงผล
+     * Pre-conditions:
+     *   - Component ของ Java Swing พร้อมใช้งาน
+     * 
+     * Post-conditions:
+     *   - UI Component แบบ GridBagLayout พร้อมรับ Event
+    */
     public Login() 
     {
         initComponents();
@@ -27,6 +38,7 @@ public class Login extends JPanel
 
     private void initComponents() 
     {
+        
         jLabel1 = new JLabel();
         jLabel2 = new JLabel();
         txtEmail = new JTextField();
@@ -123,7 +135,21 @@ public class Login extends JPanel
         add(buttonPanel, gbc);
     }
 
-    // Method จัดการเมื่อ User กดปุ่ม Login
+    /**
+     * Method จัดการเมื่อ User กดปุ่ม Login
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws JOptionPaneException แสดง Pop-up Alert หากข้อมูล Input ไม่ถูกต้อง
+     * 
+     * Pre-conditions:
+     *   - ผู้ใช้ป้อนข้อความลงในช่อง txtEmail และ txtPassword
+     * 
+     * Post-conditions:
+     *   - หากข้อมูลเป็น Admin: GUI.Admin เปิดขึ้น และปิดหน้า Login ปัจจุบัน
+     *   - หากข้อมูลเป็น User: GUI.Room เปิดขึ้น พร้อมอีเมลผู้ใช้ และปิดหน้า Login ปัจจุบัน
+     *   - หากข้อมูลผิดพลาด/ว่าง: แสดง Pop-up แจ้งเตือน Error บนหน้าต่างเดิม
+    */
     private void btnLoginActionPerformed() 
     {
         String email = txtEmail.getText().trim();
@@ -172,7 +198,19 @@ public class Login extends JPanel
         }
     }
 
-    // Method จัดการเมื่อผู้ใช้กดปุ่ม Register เพื่อเปลี่ยนไปหน้าสมัครสมาชิก
+    /**
+     * Method จัดการเมื่อผู้ใช้กดปุ่ม Register เพื่อเปลี่ยนไปหน้าสมัครสมาชิก
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws Exception ถ้าเปิดหน้า Register ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - หน้าต่างหลัก (JFrame) ซี่งเป็น Container ของ Login Panel มีอยู่จริง
+     * 
+     * Post-conditions:
+     *   - หน้า Login ปัจจุบันซ่อนลง และเปิดหน้าต่าง GUI.Register ขึ้นมาแทน
+    */
     private void btnRegisterActionPerformed() 
     {
         Window window = SwingUtilities.getWindowAncestor(this);

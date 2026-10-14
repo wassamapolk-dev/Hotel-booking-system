@@ -10,7 +10,25 @@ import java.util.List;
 public class BookingService 
 {
 
-    // บันทึกรายละเอียดการจองลงไฟล์ booking.csv
+    /**
+     * บันทึกรายละเอียดการจองลงไฟล์ booking.csv
+     * 
+     * @param email อีเมลผู้ทำรายการจอง
+     * @param name ชื่อผู้จอง
+     * @param roomNumber หมายเลขห้องพักและประเภทห้อง
+     * @param night จำนวนคืนพัก 
+     * @param totalPrice ราคารวมทั้งหมด 
+     * @param checkIn วันที่ Check-in
+     * @param checkOut วันที่ Check-out 
+     * @return void
+     * @throws IOException หากการเปิดเขียนไฟล์ booking.csv ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - ข้อมูลการจองได้รับการยืนยันและคำนวณราคารวมสำเร็จแล้ว
+     * 
+     * Post-conditions:
+     *   - บันทึกแถวข้อมูลการจองใหม่ต่อท้ายไฟล์ booking.csv พร้อมประทับเวลาทำรายการ (BookingDate)
+    */
     public static void saveBookingToCSV(String email, String name, String roomNumber, int night, int totalPrice, LocalDate checkIn, LocalDate checkOut)
     {
         File file = new File("data/booking.csv");
@@ -34,7 +52,21 @@ public class BookingService
         }
     }
 
-    // ตรวจสอบว่าห้องพักถูกจองไปแล้วในช่วงวันที่เลือกหรือไม่
+    /**
+     * ตรวจสอบว่าห้องพักถูกจองไปแล้วในช่วงวันที่เลือกหรือไม่
+     * 
+     * @param roomNumber หมายเลขห้องพักที่ต้องการเช็ก (เช่น "101")
+     * @param checkIn วันที่ต้องการ Check-in
+     * @param checkOut วันที่ต้องการ Check-out
+     * @return boolean true ถ้าห้องถูกจองแล้ว, false หากห้องว่างสามารถจองได้
+     * @throws Exception หากอ่านไฟล์หรือแปลงรูปแบบวันที่ผิดพลาด
+     * 
+     * Pre-conditions:
+     *   - checkIn ต้องเป็นวันที่ก่อน checkOut
+     * 
+     * Post-conditions:
+     *   - นำช่วงวันที่ไปเทียบ กับทุกแถวการจองใน booking.csv แล้วคืนค่าผลลัพธ์
+    */
     public static boolean isRoomBooked(String roomNumber, LocalDate checkIn, LocalDate checkOut)
     {
         File file = new File("data/booking.csv");
@@ -63,7 +95,25 @@ public class BookingService
         return false; // ห้องยังว่าง
     }
 
-    // จำลองการส่งอีเมลยืนยันการจองด้วยการเขียนไฟล์ข้อความลงไดเรกทอรี data/emails/
+    /**
+     * สร้างไฟล์ข้อความจำลองการส่งอีเมลยืนยันการจองไปยังผู้ใช้
+     * 
+     * @param email อีเมลผู้รับ
+     * @param name ชื่อผู้จอง
+     * @param room รายละเอียดห้องพัก
+     * @param night จำนวนคืน
+     * @param checkIn วันที่ Check-in
+     * @param checkOut วันที่ Check-out
+     * @param total ยอดเงินรวม
+     * @return void
+     * @throws IOException หากสร้างไดเรกทอรีหรือเขียนไฟล์ข้อความล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - การจองถูกบันทึกลงไฟล์ CSV สำเร็จแล้ว
+     * 
+     * Post-conditions:
+     *   - สร้างไดเรกทอรี data/emails/ และสร้างไฟล์ data/emails/[email]_inbox.txt บรรจุรายละเอียดใบยืนยันการจอง
+    */
     public static void sendEmailSimulation(String email, String name, String room, int night, LocalDate checkIn, LocalDate checkOut, int total)
     {
         File dir = new File("data/emails");

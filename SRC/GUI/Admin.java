@@ -13,7 +13,19 @@ public class Admin extends JFrame
     private DefaultTableModel tableModel; // Model ควบคุมข้อมูลของตาราง
     private String adminEmail;
 
-    // Constructor หลักของหน้า Admin Dashboard
+    /**
+     * Constructor หลักของหน้า Admin Dashboard
+     * 
+     * @param adminEmail อีเมลของผู้ดูแลระบบที่ล็อกอินอยู่
+     * @return void
+     * @throws Exception ถ้าวาด UI หรือโหลดข้อมูลตารางล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - ผู้ใช้งานผ่านการล็อกอินด้วยสิทธิ์ Admin
+     * 
+     * Post-conditions:
+     *   - หน้าต่าง JTable ถูกสร้างพร้อมแถวข้อมูลรายการจองที่ดึงจาก data/booking.csv
+    */
     public Admin(String adminEmail)
     {
         this.adminEmail = adminEmail;
@@ -77,7 +89,19 @@ public class Admin extends JFrame
         loadBookingData();
     }
 
-    // Method โหลดข้อมูลรายการจองทั้งหมดจาก Backend นำมาใส่ใน DefaultTableModel
+    /**
+     * Method โหลดข้อมูลรายการจองทั้งหมดจาก Backend นำมาใส่ใน DefaultTableModel
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws IOException ถ้าเปิดอ่านไฟล์ booking.csv ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - tableModel ของ JTable พร้อมใช้งาน
+     * 
+     * Post-conditions:
+     *   - ล้างข้อมูลเดิมในตารางออก และเติมข้อมูลแถวรายการจองใหม่ทั้งหมดเข้าตาราง
+    */
     private void loadBookingData()
     {
         tableModel.setRowCount(0); // ล้างข้อมูลเก่าในตารางออกก่อน
@@ -96,7 +120,21 @@ public class Admin extends JFrame
         }
     }
 
-    // Method ลบรายการจองที่ถูกเลือกในตาราง
+    /**
+     * Method ลบรายการจองที่ถูกเลือกในตารางและไฟล์ CSV
+     * 
+     * @param ไม่มี
+     * @return void
+     * @throws IOException ถ้าการลบหรือเขียนไฟล์ booking.csv ใหม่ล้มเหลว
+     * 
+     * Pre-conditions:
+     *   - Admin คลิกเลือกแถวใดแถวหนึ่งใน bookingTable
+     *   - Admin ยืนยันการลบผ่าน Confirm Dialog 
+     * 
+     * Post-conditions:
+     *   - ลบแถวข้อมูลนั้นออกจากไฟล์ booking.csv
+     *   - รีเฟรชข้อมูลในตารางใหม่โดยอัตโนมัติ
+    */
     private void deleteSelectedBooking()
     {
         int selectedRow = bookingTable.getSelectedRow(); // ดึงแถวที่ผู้ใช้คลิกเลือก

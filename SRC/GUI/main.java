@@ -4,6 +4,11 @@ import javax.swing.JFrame;
 
 public class main 
 {
+    /**
+     * @param args ข้อความอาร์กิวเมนต์จาก Command Line (อาจเป็น Array ว่างได้)
+     * @return void
+     * @throws Exception หากเกิดข้อผิดพลาดรุนแรงในการวาด Component ของ Swing
+    */
     public static void main(String[] args) 
     {
         // สร้างหน้าต่างหลักสำหรับหน้า Login
