@@ -83,6 +83,7 @@ public class Login extends JPanel
         );
 
         // ตั้งค่าปุ่มกดและ Listener ดักจับการกดปุ่ม
+        btnLogin.setText("Login");
         btnLogin.addActionListener(evt -> btnLoginActionPerformed());
 
         btnRegister.setText("Register");
