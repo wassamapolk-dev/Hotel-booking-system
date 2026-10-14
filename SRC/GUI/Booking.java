@@ -7,8 +7,6 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Booking extends JFrame 
 {
@@ -64,28 +62,22 @@ public class Booking extends JFrame
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
         bookingButton = new JButton("Booking");
-       // guestButton = new JButton("GUEST");
         roomButton = new JButton("ROOM");
 
         bookingButton.setMaximumSize(new Dimension(175, 83));
-       // guestButton.setMaximumSize(new Dimension(175, 83));
         roomButton.setMaximumSize(new Dimension(175, 83));
 
         bookingButton.setBackground(new Color(105, 129, 141));
-       // guestButton.setBackground(new Color(105, 129, 141));
         roomButton.setBackground(new Color(105, 129, 141));
 
         bookingButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
-       // guestButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
         roomButton.setFont(new Font("Segoe UI", Font.BOLD, 26));
 
         bookingButton.setForeground(Color.WHITE);
-       // guestButton.setForeground(Color.WHITE);
         roomButton.setForeground(Color.WHITE);
 
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         bookingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-       // guestButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         roomButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panelMenu.add(Box.createVerticalStrut(45));
@@ -104,6 +96,34 @@ public class Booking extends JFrame
 
         GridBagConstraints gbc = new GridBagConstraints();
 
+        // 1. เพิ่มปุ่ม Logout ไว้มุมขวาบนสุด
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.setBackground(new Color(180, 60, 60));
+        btnLogout.setForeground(Color.WHITE);
+        btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLogout.setFocusPainted(false);
+
+        btnLogout.addActionListener(e -> {
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                this.dispose();
+
+                JFrame loginFrame = new JFrame("KU Hotel - Login");
+                loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                loginFrame.setContentPane(new GUI.Login());
+                loginFrame.pack();
+                loginFrame.setLocationRelativeTo(null);
+                loginFrame.setVisible(true);
+            }
+        });
+
+        GridBagConstraints gbcTopRight = new GridBagConstraints();
+        gbcTopRight.gridx = 2;
+        gbcTopRight.gridy = 0;
+        gbcTopRight.anchor = GridBagConstraints.NORTHEAST;
+        gbcTopRight.insets = new Insets(10, 10, 0, 10);
+        panelBooking.add(btnLogout, gbcTopRight);
+
         // TITLE
         JLabel bookingTitle = new JLabel("Book a Room");
         bookingTitle.setForeground(Color.WHITE);
@@ -111,7 +131,7 @@ public class Booking extends JFrame
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 4;
+        gbc.gridwidth = 2;
         gbc.insets = new Insets(0, 0, 20, 0);
         panelBooking.add(bookingTitle, gbc);
 
@@ -134,7 +154,7 @@ public class Booking extends JFrame
         gbc.anchor = GridBagConstraints.WEST;
         panelBooking.add(nameField, gbc);
 
-        // ROOM
+        // PHONE
         PhoneLabel = new JLabel("Phone :");
         PhoneLabel.setForeground(Color.WHITE);
         PhoneLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -206,9 +226,12 @@ public class Booking extends JFrame
         this(userEmail, checkInDate, checkOutDate);
         switch (roomNumber)
         {
-            case "101": selectedRoom = "101(Single Room) 1000 Bath"; break;
+            case "101": selectedRoom = "101 1000 Bath"; break;
             case "102": selectedRoom = "102 1500 Bath"; break;
             case "103": selectedRoom = "103 2000 Bath"; break;
+            case "104": selectedRoom = "104 1000 Bath"; break;
+            case "105": selectedRoom = "105 2000 Bath"; break;
+            case "106": selectedRoom = "106 3000 Bath"; break;
             default:    selectedRoom = roomNumber; break;
         }
         updateTotalLabel();
@@ -247,6 +270,9 @@ public class Booking extends JFrame
         if (room.startsWith("101")) price = 1000;
         else if (room.startsWith("102")) price = 1500;
         else if (room.startsWith("103")) price = 2000;
+        else if (room.startsWith("104")) price = 1000;
+        else if (room.startsWith("105")) price = 2000;
+        else if (room.startsWith("106")) price = 3000;
 
         int total = price * night;
         totalLabel.setText("Total " + total + " Baht");
@@ -275,6 +301,9 @@ public class Booking extends JFrame
         if (room.startsWith("101")) price = 1000;
         else if (room.startsWith("102")) price = 1500;
         else if (room.startsWith("103")) price = 2000;
+        else if (room.startsWith("104")) price = 1000;
+        else if (room.startsWith("105")) price = 2000;
+        else if (room.startsWith("106")) price = 3000;
 
         int total = price * night;
 

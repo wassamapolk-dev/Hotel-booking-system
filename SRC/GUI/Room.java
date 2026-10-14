@@ -56,7 +56,7 @@ public class Room extends JPanel {
         add(createMainPanel(), BorderLayout.CENTER);
     }
  
-    //ปุ่มทางซ้าย
+    // ปุ่มทางซ้าย
     private JPanel createMenuPanel() {
         pnlMenu = new JPanel();
         pnlMenu.setBackground(COLOR_MENU);
@@ -96,7 +96,7 @@ public class Room extends JPanel {
         return btn;
     }
  
-    //ส่วนเลือกห้อง(ตรงกลาง)
+    // ส่วนเลือกห้อง (ตรงกลาง)
     private JPanel createMainPanel() {
         pnlMain = new JPanel(new BorderLayout());
         pnlMain.setBackground(COLOR_BG);
@@ -104,8 +104,37 @@ public class Room extends JPanel {
         lblTitle = new JLabel("Select Room", JLabel.CENTER);
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 30));
         lblTitle.setForeground(Color.WHITE);
-        lblTitle.setBorder(BorderFactory.createEmptyBorder(40, 0, 18, 0));
+        lblTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 18, 0));
         lblTitle.setAlignmentX(CENTER_ALIGNMENT);
+
+        // แถบขวาบนสำหรับปุ่ม Logout
+        JPanel pnlHeaderBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+        pnlHeaderBar.setOpaque(false);
+
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.setBackground(new Color(180, 60, 60));
+        btnLogout.setForeground(Color.WHITE);
+        btnLogout.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLogout.setFocusPainted(false);
+
+        btnLogout.addActionListener(e -> {
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                Window window = SwingUtilities.getWindowAncestor(this);
+                if (window != null) {
+                    window.dispose();
+                }
+
+                JFrame loginFrame = new JFrame("KU Hotel - Login");
+                loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                loginFrame.setContentPane(new GUI.Login());
+                loginFrame.pack();
+                loginFrame.setLocationRelativeTo(null);
+                loginFrame.setVisible(true);
+            }
+        });
+
+        pnlHeaderBar.add(btnLogout);
 
         // วันที่ Check-in / Check-out (อยู่ใต้ Select Room)
         JPanel pnlDates = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -142,6 +171,7 @@ public class Room extends JPanel {
         JPanel pnlTop = new JPanel();
         pnlTop.setBackground(COLOR_BG);
         pnlTop.setLayout(new BoxLayout(pnlTop, BoxLayout.Y_AXIS));
+        pnlTop.add(pnlHeaderBar);
         pnlTop.add(lblTitle);
         pnlTop.add(pnlDates);
         pnlMain.add(pnlTop, BorderLayout.NORTH);
@@ -167,7 +197,7 @@ public class Room extends JPanel {
         updateRoomColors();
         return pnlMain;
     }
- 
+
     // --- POPUP ปฏิทินเลือกวันที่ ---
     private void openCalendarPicker(boolean isCheckIn) {
         Window owner = SwingUtilities.getWindowAncestor(this);
@@ -206,7 +236,7 @@ public class Room extends JPanel {
                 }
 
                 YearMonth ym = YearMonth.of(currentDisplay[0].getYear(), currentDisplay[0].getMonth());
-                int dayOfWeek = ym.atDay(1).getDayOfWeek().getValue(); // 1 = Mon, 7 = Sun
+                int dayOfWeek = ym.atDay(1).getDayOfWeek().getValue();
 
                 for (int i = 1; i < dayOfWeek; i++) {
                     daysPanel.add(new JLabel(""));
@@ -260,9 +290,8 @@ public class Room extends JPanel {
         dialog.setVisible(true);
     }
 
-    //จัดการ event
+    // จัดการ event
     private void onBookingClicked() {
-        //ไปหน้า Booking
         if (!checkOutDate.isAfter(checkInDate)) {
             JOptionPane.showMessageDialog(this, "Check-out date must be after Check-in date!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -272,17 +301,16 @@ public class Room extends JPanel {
         Window window = SwingUtilities.getWindowAncestor(this);
         if (window != null) window.dispose();
     }
- 
+
     private void onGuestClicked() {
-        //ไปหน้า Guest
+        // ไปหน้า Guest
     }
- 
+
     private void onRoomMenuClicked() {
-        //อยู่หน้า Room อยู่แล้ว
+        // อยู่หน้า Room อยู่แล้ว
     }
- 
+
     private void onRoomClicked(String roomNumber) {
-        //กดจองห้องแล้วไปหน้า Booking (ส่งเลขห้องไปด้วย)
         if (!checkOutDate.isAfter(checkInDate)) {
             JOptionPane.showMessageDialog(this, "Check-out date must be after Check-in date!", "Error", JOptionPane.ERROR_MESSAGE);
             return;

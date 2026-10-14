@@ -10,7 +10,7 @@ import java.util.List;
 public class BookingService {
 
     // บันทึกข้อมูลการจองลง booking.csv (เพิ่ม CheckIn, CheckOut ท้ายแถว)
-    public static void saveBookingToCSV(String email, String name, String room, int night, int total,
+    public static void saveBookingToCSV(String email, String name, String roomNumber, int night, int totalPrice,
                                         LocalDate checkIn, LocalDate checkOut)
     {
         File file = new File("data/booking.csv");
@@ -18,11 +18,11 @@ public class BookingService {
         {
             if (file.length() == 0)
             {
-                bw.write("Email,Name,Room,Night,Total,Date,CheckIn,CheckOut");
+                bw.write("Email,Name,RoomNumber,Night,TotalPrice,BookingDate,CheckInDate,CheckOutDate");
                 bw.newLine();
             }
             String dateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            bw.write(email + "," + name + "," + room + "," + night + "," + total + "," + dateStr
+            bw.write(email + "," + name + "," + roomNumber + "," + night + "," + totalPrice + "," + dateStr
                     + "," + checkIn + "," + checkOut);
             bw.newLine();
         }
